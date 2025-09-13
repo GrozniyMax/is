@@ -1,13 +1,12 @@
-package com.maxim.lab1.dto;
+package com.maxim.lab1.controller.dto;
 
-import com.maxim.lab1.model.Transport;
+import com.maxim.lab1.utils.ValidationMessages;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.ZonedDateTime;
 

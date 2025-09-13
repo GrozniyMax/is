@@ -1,9 +1,9 @@
-package com.maxim.lab1.dto;
+package com.maxim.lab1.controller.dto;
 
+import com.maxim.lab1.utils.ValidationMessages;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
 @AllArgsConstructor
 public class CoordinatesDto {

@@ -1,6 +1,15 @@
 package com.maxim.lab1.model;
 
-public class Coordinates {
-    private Float x; //Поле не может быть null
-    private long y; //Значение поля должно быть больше -166
+import lombok.Value;
+import lombok.With;
+
+/**
+ * @param x Поле не может быть null
+ * @param y Значение поля должно быть больше -166
+ */
+@With
+public record Coordinates(
+        Long id,
+        Float x,
+        long y) {
 }

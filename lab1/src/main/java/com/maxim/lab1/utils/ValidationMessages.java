@@ -1,7 +1,4 @@
-package com.maxim.lab1.dto;
-
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.UtilityClass;
+package com.maxim.lab1.utils;
 
 public class ValidationMessages {
 

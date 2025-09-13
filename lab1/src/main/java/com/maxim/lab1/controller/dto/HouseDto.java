@@ -1,5 +1,6 @@
-package com.maxim.lab1.dto;
+package com.maxim.lab1.controller.dto;
 
+import com.maxim.lab1.utils.ValidationMessages;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
