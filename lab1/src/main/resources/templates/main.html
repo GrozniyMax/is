@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Flat List</title>
+    <meta charset="UTF-8">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            cursor: pointer;
+        }
+    </style>
+    <meta http-equiv="refresh" content="180">
+</head>
+<body>
+
+<!-- Навигация-->
+<nav>
+    <a th:href="@{/create}">Создать сущность</a>
+    <a th:href="@{/update}">Обновить сущность</a>
+    <a th:href="@{/delete}">Удалить сущность</a>
+    <a th:href="@{/special-operations}">Специальные операции</a>
+</nav>
+<h1>Flat List</h1>
+<form th:action="@{/page}" method="get">
+    <input type="text" name="name" placeholder="Filter by name" th:value="${param.name}" />
+    <button type="submit">Filter</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th><a th:href="@{/page(size=${size}, sort='id,' + ${sort.toSort() == 'id,asc' ? 'desc' : 'asc'}, name=${param.name})}">ID</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='name,' + ${sort.toSort() == 'name,asc' ? 'desc' : 'asc'}, name=${param.name})}">Name</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='area,' + ${sort.toSort() == 'area,asc' ? 'desc' : 'asc'}, name=${param.name})}">Area</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='price,' + ${sort.toSort() == 'price,asc' ? 'desc' : 'asc'}, name=${param.name})}">Price</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='numberOfRooms,' + ${sort.toSort() == 'numberOfRooms,asc' ? 'desc' : 'asc'}, name=${param.name})}">Rooms</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='floor,' + ${sort.toSort() == 'floor,asc' ? 'desc' : 'asc'}, name=${param.name})}">Floor</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='centralHeating,' + ${sort.toSort() == 'centralHeating,asc' ? 'desc' : 'asc'}, name=${param.name})}">Central Heating</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='transport,' + ${sort.toSort() == 'transport,asc' ? 'desc' : 'asc'}, name=${param.name})}">Transport</a></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="flat : ${flats}">
+        <td th:text="${flat.id}"></td>
+        <td th:text="${flat.name}"></td>
+        <td th:text="${flat.area}"></td>
+        <td th:text="${flat.price}"></td>
+        <td th:text="${flat.numberOfRooms}"></td>
+        <td th:text="${flat.floor}"></td>
+        <td th:text="${flat.centralHeating}"></td>
+        <td th:text="${flat.transport}"></td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <a th:href="@{/page(size=${size}, page=${page - 1}, sort=${sort.field + ',' + sort.type()}, name=${name})}" th:if="${page > 0}">Previous</a>
+    <a th:href="@{/page(size=${size}, page=${page + 1}, sort=${sort.field + ',' + sort.type()}, name=${name})}" th:if="${page < total - 1}">Next</a>
+</div>
+</body>
+</html>

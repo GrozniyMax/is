@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Delete Entity</title>
+    <meta charset="UTF-8">
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+    <script>
+        // Скрипт для отображения алерта с сообщением об ошибке
+        function showAlert(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
+</head>
+<body onload="showAlert([[${validationError}]]);">
+<h1>Delete Entity</h1>
+<form th:action="@{/entity/delete}" method="get">
+    <div>
+        <label for="entityType">Entity Type:</label>
+        <select id="entityType" name="entityType">
+            <option value="flat">Flat</option>
+            <option value="coordinates">Coordinates</option>
+            <option value="house">House</option>
+        </select>
+    </div>
+    <div>
+        <label for="id">ID:</label>
+        <input type="number" id="id" name="id" required />
+    </div>
+    <button type="submit">Delete</button>
+</form>
+</body>
+</html>

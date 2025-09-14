@@ -1,35 +1,44 @@
 package com.maxim.lab1.controller.dto;
 
+import com.maxim.lab1.model.Transport;
 import com.maxim.lab1.utils.ValidationMessages;
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
-
+@Getter @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class FlatDto {
 
-    @Nullable
+    @NotNull(message = ValidationMessages.NOT_NULL, groups = ValidationGroups.Update.class)
     private Long id;//Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 
     @NotNull(message = ValidationMessages.NOT_NULL)
     @NotEmpty(message = ValidationMessages.STRING_NOT_EMPTY)
     private String name; //Поле не может быть null, Строка не может быть пустой
 
+    @Valid
     @NotNull(message = ValidationMessages.NOT_NULL)
     private CoordinatesDto coordinates; //Поле не может быть null
 
     @Nullable
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
+    @NotNull(message = ValidationMessages.NOT_NULL)
     @Positive(message = ValidationMessages.POSITIVE)
     private Float area; //Значение поля должно быть больше 0
 
+    @NotNull(message = ValidationMessages.NOT_NULL)
     @Positive(message = ValidationMessages.POSITIVE)
     private Long price; //Значение поля должно быть больше 0
 
@@ -43,6 +52,7 @@ public class FlatDto {
     @Positive(message = ValidationMessages.POSITIVE)
     private int numberOfRooms; //Максимальное значение поля: 20, Значение поля должно быть больше 0
 
+    @NotNull(message = ValidationMessages.NOT_NULL)
     @Positive(message = ValidationMessages.POSITIVE)
     private Integer floor; //Значение поля должно быть больше 0
 
@@ -51,6 +61,7 @@ public class FlatDto {
     @NotNull(message = ValidationMessages.NOT_NULL)
     private Transport transport; //Поле не может быть null
 
+    @Valid
     @NotNull(message = ValidationMessages.NOT_NULL)
     private HouseDto house; //Поле не может быть null
 }

@@ -2,6 +2,8 @@ package com.maxim.lab1.db.model;
 
 import com.maxim.lab1.model.Transport;
 import com.maxim.lab1.utils.ValidationMessages;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -32,12 +36,12 @@ public class FlatDao {
     private String name; //Поле не может быть null, Строка не может быть пустой
 
     @NotNull(message = ValidationMessages.NOT_NULL)
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coordinates_id", nullable = false)
     private CoordinatesDao coordinatesDao; //Поле не может быть null
 
-    @NotNull
-    @CreationTimestamp
+    @NotNull(message = ValidationMessages.NOT_NULL)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
     @Positive(message = ValidationMessages.POSITIVE)
@@ -66,8 +70,13 @@ public class FlatDao {
     private Transport transport; //Поле не может быть null
 
     @NotNull(message = ValidationMessages.NOT_NULL)
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "house_id", nullable = false)
     private HouseDao houseDao; //Поле не может быть null
+
+    @PrePersist
+    public void prePersist() {
+        this.creationDate = ZonedDateTime.now();
+    }
 }
 

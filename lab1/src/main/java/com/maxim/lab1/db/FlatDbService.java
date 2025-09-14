@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,10 @@ public class FlatDbService {
     @Transactional
     public void deleteById(Long id) {
         flatRepository.deleteById(id);
+    }
+
+    public Optional<Flat> findById(Long id) {
+        return flatRepository.findById(id).map(mapper::toFlat);
     }
 
     public Page<Flat> findAllByName(String name, Pageable pageable) {

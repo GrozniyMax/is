@@ -9,12 +9,11 @@ import jakarta.validation.Constraint;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+@Getter @Setter
 @Entity(name = "coordinates")
 public class CoordinatesDao {
 
     @Id
-    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

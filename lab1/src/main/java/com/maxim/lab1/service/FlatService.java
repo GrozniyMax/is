@@ -5,6 +5,7 @@ import com.maxim.lab1.db.model.FlatDao;
 import com.maxim.lab1.model.Flat;
 import jakarta.persistence.TableGenerator;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ValidationException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,16 +30,27 @@ public class FlatService {
 
     @Transactional
     public void updateFlat(Flat flat, boolean link) {
+        if (flat.id() == null) {
+            throw new ValidationException("Id");
+        }
+        var inDb = flatDbService.findById(flat.id());
+        if (inDb.isEmpty()) {
+            throw new ValidationException("Flat не найдена");
+        }
         flatDbService.save(flat, link);
     }
 
     @Transactional
     public void deleteFlat(Long flatId) {
+        var found = flatDbService.findById(flatId);
+        if (found.isEmpty()) {
+            throw new ValidationException("Flat not found");
+        }
         flatDbService.deleteById(flatId);
     }
 
     public Page<Flat> getPage(Pageable pageable, String name) {
-        if (name == null) {
+        if (name == null || name.isBlank()) {
             return flatDbService.findAll(pageable);
         } else {
             return flatDbService.findAllByName(name, pageable);

@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+@Getter @Setter
 @Entity(name = "house")
 public class HouseDao implements Comparable<HouseDao>{
 
