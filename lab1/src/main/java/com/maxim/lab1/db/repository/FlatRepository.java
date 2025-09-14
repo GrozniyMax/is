@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -19,7 +20,7 @@ public interface FlatRepository extends PagingAndSortingRepository<FlatDao, Long
     @Query("SELECT COUNT(f) FROM flat f WHERE f.houseDao > :house")
     long findCountByHouseGreaterThan(HouseDao house);
 
-    Stream<FlatDao> findAllByNameStartingWith(String name);
+    List<FlatDao> findAllByNameStartingWith(String name);
 
     @Query("SELECT DISTINCT f.transport FROM flat f")
     Set<Transport> distinctTransport();

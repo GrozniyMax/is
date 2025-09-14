@@ -14,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.HashMap;
-
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -76,6 +74,11 @@ public class ViewController {
     @GetMapping("/delete")
     public String getDeletePage() {
         return "delete";
+    }
+
+    @GetMapping("/specials")
+    public String getSpecialsPage() {
+        return "specials";
     }
 
 

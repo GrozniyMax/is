@@ -66,11 +66,18 @@ public class FlatDbService {
     }
 
     public long findCountByHouseGreaterThan(House house) {
-        return flatRepository.findCountByHouseGreaterThan(mapper.toHouseDao(house));
+        var dao = houseRepository.findByNameAndYearAndNumberOfFlatsOnFloorAndNumberOfLifts(
+                house.name(),
+                house.year(),
+                house.numberOfFlatsOnFloor(),
+                house.numberOfLifts())
+                .orElse(houseRepository.save(mapper.toHouseDao(house)));
+
+        return flatRepository.findCountByHouseGreaterThan(dao);
     }
 
     public List<Flat> findAllByNameStartingWith(String name) {
-        return flatRepository.findAllByNameStartingWith(name).map(mapper::toFlat).toList();
+        return flatRepository.findAllByNameStartingWith(name).stream().map(mapper::toFlat).toList();
     }
 
     public Set<Transport> distinctTransport() {
