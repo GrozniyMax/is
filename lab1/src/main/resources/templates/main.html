@@ -4,16 +4,89 @@
     <title>Flat List</title>
     <meta charset="UTF-8">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        form input[type="text"] {
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        form button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
+            text-align: center;
         }
         th {
             cursor: pointer;
+            background-color: #f8f9fa;
+        }
+        th a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        th a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #0056b3;
         }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -28,11 +101,16 @@
     <a th:href="@{/delete}">Удалить сущность</a>
     <a th:href="@{/specials}">Специальные операции</a>
 </nav>
+
 <h1>Flat List</h1>
+
+<!-- Форма фильтрации -->
 <form th:action="@{/page}" method="get">
     <input type="text" name="name" placeholder="Filter by name" th:value="${param.name}" />
     <button type="submit">Filter</button>
 </form>
+
+<!-- Таблица -->
 <table>
     <thead>
     <tr>
@@ -81,9 +159,12 @@
     </tr>
     </tbody>
 </table>
-<div>
+
+<!-- Пагинация -->
+<div class="pagination">
     <a th:href="@{/page(size=${size}, page=${page - 1}, sort=${sort.field + ',' + sort.type()}, name=${name})}" th:if="${page > 0}">Previous</a>
     <a th:href="@{/page(size=${size}, page=${page + 1}, sort=${sort.field + ',' + sort.type()}, name=${name})}" th:if="${page < total - 1}">Next</a>
 </div>
+
 </body>
 </html>

@@ -40,7 +40,6 @@ public class FlatDao {
     @JoinColumn(name = "coordinates_id", nullable = false)
     private CoordinatesDao coordinates; //Поле не может быть null
 
-    @NotNull(message = ValidationMessages.NOT_NULL)
     @Column(name = "creation_date", nullable = false, updatable = false)
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 

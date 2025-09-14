@@ -38,7 +38,7 @@ public class ViewController {
     }
 
     @GetMapping("/page")
-    public String getFlats(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
+    public String getFlats(@PageableDefault(size = 2, sort = "id", direction = Sort.Direction.ASC)
                            Pageable pageable,
                            @RequestParam(value = "name", required = false) String name,
                            Model model) {
