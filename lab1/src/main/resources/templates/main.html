@@ -36,19 +36,19 @@
 <table>
     <thead>
     <tr>
-        <th><a th:href="@{/page(size=${size}, sort='id,' + ${sort.toSort() == 'id,asc' ? 'desc' : 'asc'}, name=${param.name})}">ID</a></th>
-        <th><a th:href="@{/page(size=${size}, sort='name,' + ${sort.toSort() == 'name,asc' ? 'desc' : 'asc'}, name=${param.name})}">Name</a></th>
-        <th>Coordinates</th>
-        <th>Creation Date</th>
-        <th><a th:href="@{/page(size=${size}, sort='area,' + ${sort.toSort() == 'area,asc' ? 'desc' : 'asc'}, name=${param.name})}">Area</a></th>
-        <th><a th:href="@{/page(size=${size}, sort='price,' + ${sort.toSort() == 'price,asc' ? 'desc' : 'asc'}, name=${param.name})}">Price</a></th>
-        <th>Balcony</th>
-        <th>Time to Metro on Foot</th>
-        <th><a th:href="@{/page(size=${size}, sort='numberOfRooms,' + ${sort.toSort() == 'numberOfRooms,asc' ? 'desc' : 'asc'}, name=${param.name})}">Rooms</a></th>
-        <th><a th:href="@{/page(size=${size}, sort='floor,' + ${sort.toSort() == 'floor,asc' ? 'desc' : 'asc'}, name=${param.name})}">Floor</a></th>
-        <th><a th:href="@{/page(size=${size}, sort='centralHeating,' + ${sort.toSort() == 'centralHeating,asc' ? 'desc' : 'asc'}, name=${param.name})}">Central Heating</a></th>
-        <th><a th:href="@{/page(size=${size}, sort='transport,' + ${sort.toSort() == 'transport,asc' ? 'desc' : 'asc'}, name=${param.name})}">Transport</a></th>
-        <th>House</th>
+        <th><a th:href="@{/page(size=${size}, sort='id,' + (${sort.field == 'id' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">ID</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='name,' + (${sort.field == 'name' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Name</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='coordinates,' + (${sort.field == 'coordinates' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Coordinates</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='creationDate,' + (${sort.field == 'creationDate' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Creation Date</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='area,' + (${sort.field == 'area' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Area</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='price,' + (${sort.field == 'price' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Price</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='balcony,' + (${sort.field == 'balcony' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Balcony</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='timeToMetroOnFoot,' + (${sort.field == 'timeToMetroOnFoot' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Time to Metro on Foot</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='numberOfRooms,' + (${sort.field == 'numberOfRooms' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Rooms</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='floor,' + (${sort.field == 'floor' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Floor</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='centralHeating,' + (${sort.field == 'centralHeating' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Central Heating</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='transport,' + (${sort.field == 'transport' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Transport</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='house,' + (${sort.field == 'house' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">House</a></th>
     </tr>
     </thead>
     <tbody>

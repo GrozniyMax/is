@@ -38,7 +38,7 @@ public class FlatDao {
     @NotNull(message = ValidationMessages.NOT_NULL)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coordinates_id", nullable = false)
-    private CoordinatesDao coordinatesDao; //Поле не может быть null
+    private CoordinatesDao coordinates; //Поле не может быть null
 
     @NotNull(message = ValidationMessages.NOT_NULL)
     @Column(name = "creation_date", nullable = false, updatable = false)
@@ -72,7 +72,7 @@ public class FlatDao {
     @NotNull(message = ValidationMessages.NOT_NULL)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "house_id", nullable = false)
-    private HouseDao houseDao; //Поле не может быть null
+    private HouseDao house; //Поле не может быть null
 
     @PrePersist
     public void prePersist() {

@@ -17,7 +17,7 @@ public interface FlatRepository extends PagingAndSortingRepository<FlatDao, Long
 
     Page<FlatDao> findAllByName(String name, Pageable pageable);
 
-    @Query("SELECT COUNT(f) FROM flat f WHERE f.houseDao > :house")
+    @Query("SELECT COUNT(f) FROM flat f WHERE f.house > :house")
     long findCountByHouseGreaterThan(HouseDao house);
 
     List<FlatDao> findAllByNameStartingWith(String name);

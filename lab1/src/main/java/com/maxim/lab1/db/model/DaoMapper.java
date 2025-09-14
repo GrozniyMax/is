@@ -15,12 +15,12 @@ public interface DaoMapper {
     House toHouse(HouseDao houseDao);
     HouseDao toHouseDao(House house);
 
-    @Mapping(target = "coordinates", source = "coordinatesDao")
-    @Mapping(target = "house", source = "houseDao")
+    @Mapping(target = "coordinates", source = "coordinates")
+    @Mapping(target = "house", source = "house")
     Flat toFlat(FlatDao flatDao);
 
-    @Mapping(target = "coordinatesDao", source = "coordinates")
-    @Mapping(target = "houseDao", source = "house")
+    @Mapping(target = "coordinates", source = "coordinates")
+    @Mapping(target = "house", source = "house")
     FlatDao toFlatDao(Flat flat);
 
 }

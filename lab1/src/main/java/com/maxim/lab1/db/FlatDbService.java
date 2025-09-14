@@ -100,21 +100,21 @@ public class FlatDbService {
 
 
     private void link(FlatDao flat) {
-        coordinatesRepository.findByXAndY(flat.getCoordinatesDao().getX(), flat.getCoordinatesDao().getY())
-                .ifPresent(flat::setCoordinatesDao);
+        coordinatesRepository.findByXAndY(flat.getCoordinates().getX(), flat.getCoordinates().getY())
+                .ifPresent(flat::setCoordinates);
 
         houseRepository.findByNameAndYearAndNumberOfFlatsOnFloorAndNumberOfLifts(
-                flat.getHouseDao().getName(),
-                flat.getHouseDao().getYear(),
-                flat.getHouseDao().getNumberOfFlatsOnFloor(),
-                flat.getHouseDao().getNumberOfLifts()
-        ).ifPresent(flat::setHouseDao);
+                flat.getHouse().getName(),
+                flat.getHouse().getYear(),
+                flat.getHouse().getNumberOfFlatsOnFloor(),
+                flat.getHouse().getNumberOfLifts()
+        ).ifPresent(flat::setHouse);
     }
 
     private void notLink(FlatDao flat) {
         // Чтобы JPA точно посчитал новыми объекты
-        flat.getCoordinatesDao().setId(null);
-        flat.getHouseDao().setId(null);
+        flat.getCoordinates().setId(null);
+        flat.getHouse().setId(null);
     }
 
 }
