@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<!-- Навигация-->
+<!-- Навигация -->
 <nav>
     <a th:href="@{/create}">Создать сущность</a>
     <a th:href="@{/update}">Обновить сущность</a>
@@ -38,24 +38,46 @@
     <tr>
         <th><a th:href="@{/page(size=${size}, sort='id,' + ${sort.toSort() == 'id,asc' ? 'desc' : 'asc'}, name=${param.name})}">ID</a></th>
         <th><a th:href="@{/page(size=${size}, sort='name,' + ${sort.toSort() == 'name,asc' ? 'desc' : 'asc'}, name=${param.name})}">Name</a></th>
+        <th>Coordinates</th>
+        <th>Creation Date</th>
         <th><a th:href="@{/page(size=${size}, sort='area,' + ${sort.toSort() == 'area,asc' ? 'desc' : 'asc'}, name=${param.name})}">Area</a></th>
         <th><a th:href="@{/page(size=${size}, sort='price,' + ${sort.toSort() == 'price,asc' ? 'desc' : 'asc'}, name=${param.name})}">Price</a></th>
+        <th>Balcony</th>
+        <th>Time to Metro on Foot</th>
         <th><a th:href="@{/page(size=${size}, sort='numberOfRooms,' + ${sort.toSort() == 'numberOfRooms,asc' ? 'desc' : 'asc'}, name=${param.name})}">Rooms</a></th>
         <th><a th:href="@{/page(size=${size}, sort='floor,' + ${sort.toSort() == 'floor,asc' ? 'desc' : 'asc'}, name=${param.name})}">Floor</a></th>
         <th><a th:href="@{/page(size=${size}, sort='centralHeating,' + ${sort.toSort() == 'centralHeating,asc' ? 'desc' : 'asc'}, name=${param.name})}">Central Heating</a></th>
         <th><a th:href="@{/page(size=${size}, sort='transport,' + ${sort.toSort() == 'transport,asc' ? 'desc' : 'asc'}, name=${param.name})}">Transport</a></th>
+        <th>House</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="flat : ${flats}">
         <td th:text="${flat.id}"></td>
         <td th:text="${flat.name}"></td>
+        <td>
+            <ul>
+                <li th:text="'X: ' + ${flat.coordinates.x}"></li>
+                <li th:text="'Y: ' + ${flat.coordinates.y}"></li>
+            </ul>
+        </td>
+        <td th:text="${flat.creationDate}"></td>
         <td th:text="${flat.area}"></td>
         <td th:text="${flat.price}"></td>
+        <td th:text="${flat.balcony ? 'Yes' : 'No'}"></td>
+        <td th:text="${flat.timeToMetroOnFoot}"></td>
         <td th:text="${flat.numberOfRooms}"></td>
         <td th:text="${flat.floor}"></td>
-        <td th:text="${flat.centralHeating}"></td>
+        <td th:text="${flat.centralHeating ? 'Yes' : 'No'}"></td>
         <td th:text="${flat.transport}"></td>
+        <td>
+            <ul>
+                <li th:text="'Name: ' + ${flat.house.name}"></li>
+                <li th:text="'Year: ' + ${flat.house.year}"></li>
+                <li th:text="'Flats on Floor: ' + ${flat.house.numberOfFlatsOnFloor}"></li>
+                <li th:text="'Lifts: ' + ${flat.house.numberOfLifts}"></li>
+            </ul>
+        </td>
     </tr>
     </tbody>
 </table>
