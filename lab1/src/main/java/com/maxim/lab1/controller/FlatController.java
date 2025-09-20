@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Controller()
+@Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FlatController {
@@ -62,10 +62,10 @@ public class FlatController {
     public String deleteEntity(@RequestParam("entityType") String entityType, @RequestParam("id") Long id, Model model) {
         try {
             removalService.deleteById(entityType.toLowerCase(), id);
-            return "redirect:/page"; // Перенаправление на страницу успеха
+            return "redirect:/page";
         } catch (ValidationException e) {
             model.addAttribute("validationError", e.getMessage());
-            return "delete"; // Имя Thymeleaf-шаблона
+            return "delete";
         }
     }
 

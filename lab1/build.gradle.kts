@@ -39,6 +39,14 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+tasks.withType<Jar> {
+    enabled = true
+    archiveFileName.set("lab1.jar")
+    manifest {
+        attributes["Main-Class"] = "com.maxim.lab1.Lab1Application"
+    }
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
