@@ -1,8 +1,6 @@
 package com.maxim.lab1.service;
 
-import com.maxim.lab1.controller.dto.DtoMapper;
 import com.maxim.lab1.db.FlatDbService;
-import com.maxim.lab1.db.model.FlatDao;
 import com.maxim.lab1.model.Flat;
 import com.maxim.lab1.model.House;
 import com.maxim.lab1.model.Transport;
@@ -10,13 +8,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
