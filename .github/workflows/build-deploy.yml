@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies (sshpass, scp, ssh)
         run: |
           sudo apt-get update
-          sudo apt-get install -y openssh-client scp sshpass
+          sudo apt-get install -y openssh-client sshpass
 
       - name: Deploy JAR via SCP (with password)
         env:
