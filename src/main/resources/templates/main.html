@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Flat List</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 20px;
+        }
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        form input[type="text"] {
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        form button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            cursor: pointer;
+            background-color: #f8f9fa;
+        }
+        th a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        th a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/comon.css">
+    <meta http-equiv="refresh" content="180">
+</head>
+<body>
+
+<!-- Навигация -->
+<nav>
+    <a th:href="@{/create}">Создать сущность</a>
+    <a th:href="@{/update}">Обновить сущность</a>
+    <a th:href="@{/delete}">Удалить сущность</a>
+    <a th:href="@{/specials}">Специальные операции</a>
+</nav>
+
+<h1>Flat List</h1>
+
+<!-- Форма фильтрации -->
+<form th:action="@{/page}" method="get">
+    <input type="text" name="name" placeholder="Filter by name" th:value="${param.name}" />
+    <button type="submit">Filter</button>
+</form>
+
+<!-- Таблица -->
+<table>
+    <thead>
+    <tr>
+        <th><a th:href="@{/page(size=${size}, sort='id,' + (${sort.field == 'id' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">ID</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='name,' + (${sort.field == 'name' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Name</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='coordinates,' + (${sort.field == 'coordinates' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Coordinates</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='creationDate,' + (${sort.field == 'creationDate' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Creation Date</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='area,' + (${sort.field == 'area' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Area</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='price,' + (${sort.field == 'price' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Price</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='balcony,' + (${sort.field == 'balcony' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Balcony</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='timeToMetroOnFoot,' + (${sort.field == 'timeToMetroOnFoot' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Time to Metro on Foot</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='numberOfRooms,' + (${sort.field == 'numberOfRooms' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Rooms</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='floor,' + (${sort.field == 'floor' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Floor</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='centralHeating,' + (${sort.field == 'centralHeating' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Central Heating</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='transport,' + (${sort.field == 'transport' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">Transport</a></th>
+        <th><a th:href="@{/page(size=${size}, sort='house,' + (${sort.field == 'house' && sort.type == 'asc' ? 'desc' : 'asc'}), name=${param.name})}">House</a></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="flat : ${flats}">
+        <td th:text="${flat.id}"></td>
+        <td th:text="${flat.name}"></td>
+        <td>
+            <ul>
+                <li th:text="'X: ' + ${flat.coordinates.x}"></li>
+                <li th:text="'Y: ' + ${flat.coordinates.y}"></li>
+            </ul>
+        </td>
+        <td th:text="${flat.creationDate}"></td>
+        <td th:text="${flat.area}"></td>
+        <td th:text="${flat.price}"></td>
+        <td th:text="${flat.balcony ? 'Yes' : 'No'}"></td>
+        <td th:text="${flat.timeToMetroOnFoot}"></td>
+        <td th:text="${flat.numberOfRooms}"></td>
+        <td th:text="${flat.floor}"></td>
+        <td th:text="${flat.centralHeating ? 'Yes' : 'No'}"></td>
+        <td th:text="${flat.transport}"></td>
+        <td>
+            <ul>
+                <li th:text="'Name: ' + ${flat.house.name}"></li>
+                <li th:text="'Year: ' + ${flat.house.year}"></li>
+                <li th:text="'Flats on Floor: ' + ${flat.house.numberOfFlatsOnFloor}"></li>
+                <li th:text="'Lifts: ' + ${flat.house.numberOfLifts}"></li>
+            </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Пагинация -->
+<div class="pagination">
+    <a th:href="@{/page(size=${size}, page=${page - 1}, sort=${sort.field + ',' + sort.type()}, name=${name})}" th:if="${page > 0}">Previous</a>
+    <a th:href="@{/page(size=${size}, page=${page + 1}, sort=${sort.field + ',' + sort.type()}, name=${name})}" th:if="${page < total - 1}">Next</a>
+</div>
+
+</body>
+</html>

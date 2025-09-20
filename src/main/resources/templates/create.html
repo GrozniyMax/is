@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Flat</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/comon.css" >
+    <link rel="stylesheet" href="styles/forms.css" >
+</head>
+<body>
+<form th:action="@{/flat/create}" th:object="${flatDto}" method="post">
+    <h1>Create Flat</h1>
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}" />
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></span>
+    </div>
+    <div>
+        <label>Coordinates:</label>
+        <div>
+            <label for="coordinates.x">X:</label>
+            <input type="number" id="coordinates.x" th:field="*{coordinates.x}" />
+            <span th:if="${#fields.hasErrors('coordinates.x')}" th:errors="*{coordinates.x}" class="error"></span>
+        </div>
+        <div>
+            <label for="coordinates.y">Y:</label>
+            <input type="number" id="coordinates.y" th:field="*{coordinates.y}" />
+            <span th:if="${#fields.hasErrors('coordinates.y')}" th:errors="*{coordinates.y}" class="error"></span>
+        </div>
+    </div>
+    <div>
+        <label for="area">Area:</label>
+        <input type="number" id="area" th:field="*{area}" />
+        <span th:if="${#fields.hasErrors('area')}" th:errors="*{area}" class="error"></span>
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input type="number" id="price" th:field="*{price}" />
+        <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error"></span>
+    </div>
+    <div>
+        <label for="balcony">Balcony:</label>
+        <input type="checkbox" id="balcony" th:field="*{balcony}" />
+        <span th:if="${#fields.hasErrors('balcony')}" th:errors="*{balcony}" class="error"></span>
+    </div>
+    <div>
+        <label for="timeToMetroOnFoot">Time to Metro on Foot:</label>
+        <input type="number" id="timeToMetroOnFoot" th:field="*{timeToMetroOnFoot}" />
+        <span th:if="${#fields.hasErrors('timeToMetroOnFoot')}" th:errors="*{timeToMetroOnFoot}" class="error"></span>
+    </div>
+    <div>
+        <label for="numberOfRooms">Number of Rooms:</label>
+        <input type="number" id="numberOfRooms" th:field="*{numberOfRooms}" />
+        <span th:if="${#fields.hasErrors('numberOfRooms')}" th:errors="*{numberOfRooms}" class="error"></span>
+    </div>
+    <div>
+        <label for="floor">Floor:</label>
+        <input type="number" id="floor" th:field="*{floor}" />
+        <span th:if="${#fields.hasErrors('floor')}" th:errors="*{floor}" class="error"></span>
+    </div>
+    <div>
+        <label for="centralHeating">Central Heating:</label>
+        <input type="checkbox" id="centralHeating" th:field="*{centralHeating}" />
+    </div>
+    <div>
+        <label for="transport">Transport:</label>
+        <select id="transport" th:field="*{transport}">
+            <option value="FEW">few</option>
+            <option value="LITTLE">little</option>
+            <option value="NORMAL">normal</option>
+        </select>
+        <span th:if="${#fields.hasErrors('transport')}" th:errors="*{transport}" class="error"></span>
+    </div>
+    <div>
+        <label>House:</label>
+        <div>
+            <label for="house.name">Name:</label>
+            <input type="text" id="house.name" th:field="*{house.name}" />
+            <span th:if="${#fields.hasErrors('house.name')}" th:errors="*{house.name}" class="error"></span>
+        </div>
+        <div>
+            <label for="house.year">Year:</label>
+            <input type="number" id="house.year" th:field="*{house.year}" />
+            <span th:if="${#fields.hasErrors('house.year')}" th:errors="*{house.year}" class="error"></span>
+        </div>
+        <div>
+            <label for="house.numberOfFlatsOnFloor">Number of Flats on Floor:</label>
+            <input type="number" id="house.numberOfFlatsOnFloor" th:field="*{house.numberOfFlatsOnFloor}" />
+            <span th:if="${#fields.hasErrors('house.numberOfFlatsOnFloor')}" th:errors="*{house.numberOfFlatsOnFloor}" class="error"></span>
+        </div>
+        <div>
+            <label for="house.numberOfLifts">Number of Lifts:</label>
+            <input type="number" id="house.numberOfLifts" th:field="*{house.numberOfLifts}" />
+            <span th:if="${#fields.hasErrors('house.numberOfLifts')}" th:errors="*{house.numberOfLifts}" class="error"></span>
+        </div>
+    </div>
+    <div>
+        <label for="link">Link:</label>
+        <input type="checkbox" id="link" name="link" value="true" />
+    </div>
+    <button type="submit">Create</button>
+</form>
+</body>
+</html>

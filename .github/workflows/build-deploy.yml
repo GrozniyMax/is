@@ -41,5 +41,5 @@ jobs:
           # Формируем путь к JAR файлу
           JAR_FILE=$(ls build/libs/*.jar)
 
-          # Выполняем SCP с использованием пароля
-          sshpass -p "$SERVER_PASSWORD" scp -P $SERVER_PORT "$JAR_FILE" "${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}"
+          # Выполняем SCP с использованием пароля и отключением проверки host key
+          sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $SERVER_PORT "$JAR_FILE" "${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}"
