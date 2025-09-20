@@ -1,6 +1,5 @@
 package com.maxim.lab1.model;
 
-import lombok.Value;
 import lombok.With;
 
 import java.time.ZonedDateTime;
