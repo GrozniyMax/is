@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Special Operations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/comon.css">
+</head>
+<body>
+<div class="container">
+    <h1>Special Operations</h1>
+
+    <!-- Form for findCountByHouseGreaterThan -->
+    <div class="card mb-3">
+        <div class="card-header">Find Count By House Greater Than</div>
+        <div class="card-body">
+            <form th:action="@{/findCountByHouseGreaterThan}" method="post">
+                <!-- Поле для имени дома -->
+                <div class="form-group">
+                    <label for="houseName">House Name:</label>
+                    <input type="text" id="houseName" name="name" class="form-control" required>
+                </div>
+
+                <!-- Поле для года -->
+                <div class="form-group">
+                    <label for="houseYear">Year:</label>
+                    <input type="number" id="houseYear" name="year" class="form-control" min="1" required>
+                </div>
+
+                <!-- Поле для количества квартир на этаже -->
+                <div class="form-group">
+                    <label for="numberOfFlatsOnFloor">Number of Flats on Floor:</label>
+                    <input type="number" id="numberOfFlatsOnFloor" name="numberOfFlatsOnFloor" class="form-control" min="1" required>
+                </div>
+
+                <!-- Поле для количества лифтов -->
+                <div class="form-group">
+                    <label for="numberOfLifts">Number of Lifts:</label>
+                    <input type="number" id="numberOfLifts" name="numberOfLifts" class="form-control" min="1" required>
+                </div>
+
+                <!-- Кнопка отправки -->
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+            <!-- Отображение результата -->
+            <div th:if="${count != null}">
+                <h5>Result: <span th:text="${count}"></span></h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form for findAllByNameStartingWith -->
+    <div class="card mb-3">
+        <div class="card-header">Find All By Name Starting With</div>
+        <div class="card-body">
+            <form th:action="@{/findAllByNameStartingWith}" method="get">
+                <div class="form-group">
+                    <label for="name">Name Prefix:</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <ul th:if="${flats != null}">
+                <li th:each="flat : ${flats}" th:text="${flat.toString()}"></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Form for distinctTransport -->
+    <div class="card mb-3">
+        <div class="card-header">Distinct Transport</div>
+        <div class="card-body">
+            <form th:action="@{/distinctTransport}" method="get">
+                <button type="submit" class="btn btn-primary">Get Distinct Transport</button>
+            </form>
+            <ul th:if="${transports != null}">
+                <li th:each="transport : ${transports}" th:text="${transport.toString()}"></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Form for findMostExpensive -->
+    <div class="card mb-3">
+        <div class="card-header">Find Most Expensive</div>
+        <div class="card-body">
+            <form th:action="@{/findMostExpensive}" method="get">
+                <div class="form-group">
+                    <label for="id1">ID 1:</label>
+                    <input type="number" id="id1" name="id1" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="id2">ID 2:</label>
+                    <input type="number" id="id2" name="id2" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="id3">ID 3:</label>
+                    <input type="number" id="id3" name="id3" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <div th:if="${flat != null}">
+                <h5>Result: <span th:text="${flat.toString()}"></span></h5>
+            </div>
+            <div th:if="${flat == null}">
+                <h5>Result: Not found</h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form for findTotalCost -->
+    <div class="card mb-3">
+        <div class="card-header">Find Total Cost</div>
+        <div class="card-body">
+            <form th:action="@{/findTotalCost}" method="get">
+                <button type="submit" class="btn btn-primary">Get Total Cost</button>
+            </form>
+            <div th:if="${totalCost != null}">
+                <h5>Total Cost: <span th:text="${totalCost}"></span></h5>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

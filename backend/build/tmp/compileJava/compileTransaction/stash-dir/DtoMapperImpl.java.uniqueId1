@@ -1,0 +1,154 @@
+package com.maxim.lab1.controller.dto;
+
+import com.maxim.lab1.model.Coordinates;
+import com.maxim.lab1.model.Flat;
+import com.maxim.lab1.model.House;
+import com.maxim.lab1.model.Transport;
+import java.time.ZonedDateTime;
+import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
+
+@Generated(
+    value = "org.mapstruct.ap.MappingProcessor",
+    date = "2025-09-20T14:30:54+0300",
+    comments = "version: 1.6.3, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.14.3.jar, environment: Java 17.0.12 (Oracle Corporation)"
+)
+@Component
+public class DtoMapperImpl implements DtoMapper {
+
+    @Override
+    public CoordinatesDto toCoordinatesDto(Coordinates coordinates) {
+        if ( coordinates == null ) {
+            return null;
+        }
+
+        CoordinatesDto coordinatesDto = new CoordinatesDto();
+
+        coordinatesDto.setX( coordinates.x() );
+        coordinatesDto.setY( coordinates.y() );
+
+        return coordinatesDto;
+    }
+
+    @Override
+    public Coordinates toCoordinates(CoordinatesDto coordinatesDto) {
+        if ( coordinatesDto == null ) {
+            return null;
+        }
+
+        Float x = null;
+        long y = 0L;
+
+        x = coordinatesDto.getX();
+        y = coordinatesDto.getY();
+
+        Long id = null;
+
+        Coordinates coordinates = new Coordinates( id, x, y );
+
+        return coordinates;
+    }
+
+    @Override
+    public HouseDto toHouseDto(House house) {
+        if ( house == null ) {
+            return null;
+        }
+
+        HouseDto houseDto = new HouseDto();
+
+        houseDto.setName( house.name() );
+        houseDto.setYear( house.year() );
+        houseDto.setNumberOfFlatsOnFloor( house.numberOfFlatsOnFloor() );
+        houseDto.setNumberOfLifts( house.numberOfLifts() );
+
+        return houseDto;
+    }
+
+    @Override
+    public House toHouse(HouseDto houseDto) {
+        if ( houseDto == null ) {
+            return null;
+        }
+
+        String name = null;
+        long year = 0L;
+        int numberOfFlatsOnFloor = 0;
+        long numberOfLifts = 0L;
+
+        name = houseDto.getName();
+        year = houseDto.getYear();
+        numberOfFlatsOnFloor = houseDto.getNumberOfFlatsOnFloor();
+        numberOfLifts = houseDto.getNumberOfLifts();
+
+        Long id = null;
+
+        House house = new House( id, name, year, numberOfFlatsOnFloor, numberOfLifts );
+
+        return house;
+    }
+
+    @Override
+    public FlatDto toFlatDto(Flat flat) {
+        if ( flat == null ) {
+            return null;
+        }
+
+        FlatDto flatDto = new FlatDto();
+
+        flatDto.setId( flat.id() );
+        flatDto.setName( flat.name() );
+        flatDto.setCoordinates( toCoordinatesDto( flat.coordinates() ) );
+        flatDto.setCreationDate( flat.creationDate() );
+        flatDto.setArea( flat.area() );
+        flatDto.setPrice( flat.price() );
+        flatDto.setBalcony( flat.balcony() );
+        flatDto.setTimeToMetroOnFoot( flat.timeToMetroOnFoot() );
+        flatDto.setNumberOfRooms( flat.numberOfRooms() );
+        flatDto.setFloor( flat.floor() );
+        flatDto.setCentralHeating( flat.centralHeating() );
+        flatDto.setTransport( flat.transport() );
+        flatDto.setHouse( toHouseDto( flat.house() ) );
+
+        return flatDto;
+    }
+
+    @Override
+    public Flat toFlat(FlatDto flatDto) {
+        if ( flatDto == null ) {
+            return null;
+        }
+
+        Long id = null;
+        String name = null;
+        Coordinates coordinates = null;
+        ZonedDateTime creationDate = null;
+        Float area = null;
+        Long price = null;
+        Boolean balcony = null;
+        float timeToMetroOnFoot = 0.0f;
+        int numberOfRooms = 0;
+        Integer floor = null;
+        boolean centralHeating = false;
+        Transport transport = null;
+        House house = null;
+
+        id = flatDto.getId();
+        name = flatDto.getName();
+        coordinates = toCoordinates( flatDto.getCoordinates() );
+        creationDate = flatDto.getCreationDate();
+        area = flatDto.getArea();
+        price = flatDto.getPrice();
+        balcony = flatDto.getBalcony();
+        timeToMetroOnFoot = flatDto.getTimeToMetroOnFoot();
+        numberOfRooms = flatDto.getNumberOfRooms();
+        floor = flatDto.getFloor();
+        centralHeating = flatDto.isCentralHeating();
+        transport = flatDto.getTransport();
+        house = toHouse( flatDto.getHouse() );
+
+        Flat flat = new Flat( id, name, coordinates, creationDate, area, price, balcony, timeToMetroOnFoot, numberOfRooms, floor, centralHeating, transport, house );
+
+        return flat;
+    }
+}
