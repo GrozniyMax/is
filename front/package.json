@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "generate:types": "openapi-typescript ../contract.yaml -o src/client/dto/types.ts",
+    "generate:types": "openapi-typescript ../contract.yaml -o src/client/dto/types.d.ts",
     "prebuild": "npm run generate:types",
     "predev": "npm run generate:types",
     "build": "tsc -b && vite build",

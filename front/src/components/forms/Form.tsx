@@ -1,8 +1,9 @@
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import * as Yup from "yup";
-import type {components} from "../../client/dto/types.ts";
+import type {components} from "../../client/dto/types.d.ts";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
+import {createFlat, updateFlat} from "../../client/Client.ts";
 
 // Enums
 const transportOptions = ["NONE", "FEW", "NORMAL", "A_LOT"] as const;
@@ -129,8 +130,19 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
     const [link, setLink] = useState(false);
 
     function onSubmit(value: FlatDto) {
-        //TODO прописать
+        const submitPromise = type === "update"
+            ? updateFlat(value, link)
+            : createFlat(value, link);
 
+        submitPromise
+            .then(() => {
+                alert("Успешно сохранено");
+                navigate("/table");
+            })
+            .catch((error) => {
+                console.error("Ошибка:", error);
+                alert("Ошибка при сохранении");
+            });
     }
 
     function resolveValidationSchema() {

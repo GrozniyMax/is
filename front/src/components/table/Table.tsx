@@ -3,7 +3,7 @@ import {getData} from "../../client/Client.ts";
 import {useNavigate} from "react-router-dom";
 import {Header, type HeaderProps} from "./Header.tsx";
 import {TooltipCell} from "./TooltipCell.tsx";
-import type {components} from "../../client/dto/types.ts";
+import type {components} from "../../client/dto/types.d.ts";
 
 type FlatDto = components["schemas"]["FlatDto"]
 
@@ -12,9 +12,9 @@ export function DataTable() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-
+    const [filter, setFilter] = useState("")
     const [page, setPage] = useState(0)
-    const [size, setSize] = useState(20)
+    const [size] = useState(20)
     const [field, setField] = useState("id")
     const [order, setOrder] = useState("asc")
 
@@ -35,7 +35,7 @@ export function DataTable() {
     useEffect(() => {
         setLoading(true);
 
-        getData(Number(page), Number(size), field, order)
+        getData(Number(page), Number(size), field, order, filter)
             .then((res) => {
                 setData(res);
             })
@@ -47,7 +47,7 @@ export function DataTable() {
         console.log("Size", size)
         console.log("Order", order)
         console.log("Field", field)
-    }, [page, size, field, order]); // будет вызываться при изменении этих значений
+    }, [page, size, field, order, filter]); // будет вызываться при изменении этих значений
 
     return (
         <div>
@@ -56,6 +56,12 @@ export function DataTable() {
             {!loading &&
                 <>
                     <h1>Таблица квартир</h1>
+                    <label>
+                        <input type="text"
+                               value={filter}
+                               onChange={(e) => setFilter(e.target.value)}/>
+                        Фильтрация по имени
+                    </label>
                     <table id="data-table">
                         <thead>
                         <tr>
