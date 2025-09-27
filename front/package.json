@@ -5,30 +5,34 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "generate:api": "node scripts/generate-api.js",
-    "generate:types": "npx openapi-typescript ../contract.yaml --output ./src/types/api.d.ts",
-    "generate:all": "npm run generate:types && npm run generate:api",
-    "prebuild": "npm run generate:all",
-    "predev": "npm run generate:all",
+    "generate:types": "openapi-typescript ../contract.yaml -o src/client/dto/types.ts",
+    "prebuild": "npm run generate:types",
+    "predev": "npm run generate:types",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "formik": "^2.4.5",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^6.23.1",
+    "tailwindcss": "^3.4.3",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
-    "openapi-typescript-codegen": "^0.23.0",
-    "openapi-typescript": "^6.0.0",
     "@eslint/js": "^9.36.0",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.3",
+    "autoprefixer": "^10.4.19",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
+    "openapi-typescript": "^6.0.0",
+    "openapi-typescript-codegen": "^0.23.0",
+    "postcss": "^8.4.38",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.44.0",
     "vite": "^7.1.7"
