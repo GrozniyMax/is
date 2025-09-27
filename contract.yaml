@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: Flat API
+  description: API для управления квартирами
+  version: 1.0.0
+
+components:
+  schemas:
+    FlatDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: Уникальный идентификатор квартиры, генерируется автоматически
+        name:
+          type: string
+          example: "Cozy apartment"
+          description: Название квартиры, не может быть пустым
+        coordinates:
+          $ref: '#/components/schemas/CoordinatesDto'
+        creationDate:
+          type: string
+          format: date-time
+          description: Дата создания квартиры, генерируется автоматически
+        area:
+          type: number
+          format: float
+          example: 65.5
+          description: Площадь квартиры, должна быть больше 0
+        price:
+          type: integer
+          format: int64
+          example: 5000000
+          description: Цена квартиры, должна быть больше 0
+        balcony:
+          type: boolean
+          description: Наличие балкона, может быть null
+        timeToMetroOnFoot:
+          type: number
+          format: float
+          example: 15.5
+          description: Время до метро пешком, должно быть больше 0
+        numberOfRooms:
+          type: integer
+          example: 3
+          description: Количество комнат, должно быть больше 0 и не больше 20
+        floor:
+          type: integer
+          example: 5
+          description: Этаж квартиры, должен быть больше 0
+        centralHeating:
+          type: boolean
+          description: Наличие центрального отопления
+        transport:
+          $ref: '#/components/schemas/Transport'
+        house:
+          $ref: '#/components/schemas/HouseDto'
+      required:
+        - name
+        - coordinates
+        - area
+        - price
+        - numberOfRooms
+        - floor
+        - transport
+        - house
+
+    HouseDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Sky House"
+          description: Название дома
+        year:
+          type: integer
+          format: int64
+          example: 2015
+          description: Год постройки дома, должен быть больше 0
+        numberOfFlatsOnFloor:
+          type: integer
+          example: 10
+          description: Количество квартир на этаже, должно быть больше 0
+        numberOfLifts:
+          type: integer
+          example: 2
+          description: Количество лифтов, должно быть больше 0
+      required:
+        - name
+        - year
+        - numberOfFlatsOnFloor
+        - numberOfLifts
+
+    CoordinatesDto:
+      type: object
+      properties:
+        x:
+          type: number
+          format: float
+          example: 12.3
+          description: Координата X, не может быть null
+        y:
+          type: integer
+          format: int64
+          example: -100
+          description: Координата Y, должна быть больше -166
+      required:
+        - x
+        - y
+
+    Transport:
+      type: string
+      enum:
+        - NONE
+        - FEW
+        - NORMAL
+        - A_LOT
+      description: Уровень транспортной доступности
+
+paths:
+  /flats:
+    get:
+      summary: Получить список всех квартир
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlatDto'
+    post:
+      summary: Создать новую квартиру
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlatDto'
+      responses:
+        '201':
+          description: Квартира успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlatDto'
+
+  /flats/{id}:
+    get:
+      summary: Получить квартиру по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlatDto'
+        '404':
+          description: Квартира не найдена
+    put:
+      summary: Обновить квартиру
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlatDto'
+      responses:
+        '200':
+          description: Квартира успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlatDto'
+        '404':
+          description: Квартира не найдена
+    delete:
+      summary: Удалить квартиру
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Квартира успешно удалена
+        '404':
+          description: Квартира не найдена
