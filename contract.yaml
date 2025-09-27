@@ -8,55 +8,6 @@ components:
   schemas:
     FlatDto:
       type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 1
-          description: Уникальный идентификатор квартиры, генерируется автоматически
-        name:
-          type: string
-          example: "Cozy apartment"
-          description: Название квартиры, не может быть пустым
-        coordinates:
-          $ref: '#/components/schemas/CoordinatesDto'
-        creationDate:
-          type: string
-          format: date-time
-          description: Дата создания квартиры, генерируется автоматически
-        area:
-          type: number
-          format: float
-          example: 65.5
-          description: Площадь квартиры, должна быть больше 0
-        price:
-          type: integer
-          format: int64
-          example: 5000000
-          description: Цена квартиры, должна быть больше 0
-        balcony:
-          type: boolean
-          description: Наличие балкона, может быть null
-        timeToMetroOnFoot:
-          type: number
-          format: float
-          example: 15.5
-          description: Время до метро пешком, должно быть больше 0
-        numberOfRooms:
-          type: integer
-          example: 3
-          description: Количество комнат, должно быть больше 0 и не больше 20
-        floor:
-          type: integer
-          example: 5
-          description: Этаж квартиры, должен быть больше 0
-        centralHeating:
-          type: boolean
-          description: Наличие центрального отопления
-        transport:
-          $ref: '#/components/schemas/Transport'
-        house:
-          $ref: '#/components/schemas/HouseDto'
       required:
         - name
         - coordinates
@@ -66,9 +17,74 @@ components:
         - floor
         - transport
         - house
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 1
+          description: Уникальный идентификатор квартиры, генерируется автоматически
+        name:
+          type: string
+          minLength: 1
+          example: "Cozy apartment"
+          description: Название квартиры, не может быть пустым
+        coordinates:
+          $ref: '#/components/schemas/CoordinatesDto'
+        creationDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: Дата создания квартиры, генерируется автоматически
+        area:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          example: 65.5
+          description: Площадь квартиры, должна быть больше 0
+        price:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 5000000
+          description: Цена квартиры, должна быть больше 0
+        balcony:
+          type: boolean
+          nullable: true
+          description: Наличие балкона, может быть null
+        timeToMetroOnFoot:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          nullable: true
+          example: 15.5
+          description: Время до метро пешком, должно быть больше 0
+        numberOfRooms:
+          type: integer
+          minimum: 1
+          maximum: 20
+          example: 3
+          description: Количество комнат, должно быть больше 0 и не больше 20
+        floor:
+          type: integer
+          minimum: 1
+          example: 5
+          description: Этаж квартиры, должен быть больше 0
+        centralHeating:
+          type: boolean
+          description: Наличие центрального отопления
+        transport:
+          $ref: '#/components/schemas/Transport'
+        house:
+          $ref: '#/components/schemas/HouseDto'
 
     HouseDto:
       type: object
+      required:
+        - name
+        - year
+        - numberOfFlatsOnFloor
+        - numberOfLifts
       properties:
         id:
           type: integer
@@ -77,29 +93,31 @@ components:
           description: Уникальный идентификатор дома, может быть null
         name:
           type: string
+          minLength: 1
           example: "Sky House"
           description: Название дома
         year:
           type: integer
           format: int64
+          minimum: 1
           example: 2015
           description: Год постройки дома, должен быть больше 0
         numberOfFlatsOnFloor:
           type: integer
+          minimum: 1
           example: 10
           description: Количество квартир на этаже, должно быть больше 0
         numberOfLifts:
           type: integer
+          minimum: 1
           example: 2
           description: Количество лифтов, должно быть больше 0
-      required:
-        - name
-        - year
-        - numberOfFlatsOnFloor
-        - numberOfLifts
 
     CoordinatesDto:
       type: object
+      required:
+        - x
+        - y
       properties:
         id:
           type: integer
@@ -114,11 +132,10 @@ components:
         y:
           type: integer
           format: int64
+          minimum: -165
           example: -100
           description: Координата Y, должна быть больше -166
-      required:
-        - x
-        - y
+
     Transport:
       type: string
       enum:
@@ -167,6 +184,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         '200':
           description: Успешный ответ
@@ -185,6 +203,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       requestBody:
         required: true
         content:
@@ -209,6 +228,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         '204':
           description: Квартира успешно удалена
