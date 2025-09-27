@@ -10,17 +10,19 @@ import jakarta.validation.ValidationException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+
+@RestController("/flat")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FlatController {
@@ -29,44 +31,30 @@ public class FlatController {
     FlatService flatService;
     RemovalService removalService;
 
-    @PostMapping("/flat/create")
-    public String createFlat(@Valid @ModelAttribute("flatDto") FlatDto flatDto,
-                             BindingResult result,
+    @GetMapping("/page")
+    public Page<FlatDto> getFlats(@PageableDefault(size = 2, sort = "id", direction = Sort.Direction.ASC)
+                                  Pageable pageable,
+                                  @RequestParam(value = "name", required = false) String name) {
+        return flatService.getPage(pageable, name).map(mapper::toFlatDto);
+    }
+
+    @PostMapping("/create")
+    public void createFlat(@Valid FlatDto flatDto,
                              @RequestParam(value = "link", required = false, defaultValue = "false") Boolean link) {
-        if (result.hasErrors()) {
-            return "create";
-        }
+
         flatService.createFlat(mapper.toFlat(flatDto), link);
-        return "redirect:/page";
     }
 
-    @PostMapping("/flat/update")
-    public String updateFlat(@Valid @Validated(ValidationGroups.Update.class) @ModelAttribute("flatDto") FlatDto flatDto,
-                             BindingResult result,
-                             @RequestParam(value = "link", required = false, defaultValue = "false") Boolean link,
-                             Model model) {
-        try {
-            if (result.hasErrors()) {
-                return "update";
-            }
-            flatService.updateFlat(mapper.toFlat(flatDto), link);
-            return "redirect:/page";
-        } catch (ValidationException e) {
-            result.addError(new FieldError("flatDto", "id", e.getMessage()));
-            model.addAttribute("flatDto", flatDto);
-            return "update";
-        }
+    @PostMapping("/update")
+    public void updateFlat(@Valid @Validated(ValidationGroups.Update.class) FlatDto flatDto,
+                             @RequestParam(value = "link", required = false, defaultValue = "false") Boolean link) {
+
+        flatService.updateFlat(mapper.toFlat(flatDto), link);
     }
 
-    @GetMapping("/entity/delete")
-    public String deleteEntity(@RequestParam("entityType") String entityType, @RequestParam("id") Long id, Model model) {
-        try {
-            removalService.deleteById(entityType.toLowerCase(), id);
-            return "redirect:/page";
-        } catch (ValidationException e) {
-            model.addAttribute("validationError", e.getMessage());
-            return "delete";
-        }
+    @DeleteMapping("/{entity}/{id}")
+    public void deleteEntity(@PathVariable("entity") String entityType, @PathVariable("id") Long id) {
+        removalService.deleteById(entityType.toLowerCase(), id);
     }
 
 }
