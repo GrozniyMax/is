@@ -1,5 +1,6 @@
 package com.maxim.lab1.db.model;
 
+import com.maxim.lab1.model.BatchOperation;
 import com.maxim.lab1.model.Coordinates;
 import com.maxim.lab1.model.Flat;
 import com.maxim.lab1.model.House;
@@ -22,5 +23,9 @@ public interface DaoMapper {
     @Mapping(target = "coordinates", source = "coordinates")
     @Mapping(target = "house", source = "house")
     FlatDao toFlatDao(Flat flat);
+
+    BatchOperation toBatchOperation(BatchOperationDao batchOperationDao);
+
+    BatchOperationDao toBatchOperationDao(BatchOperation batchOperation);
 
 }

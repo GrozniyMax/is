@@ -49,6 +49,11 @@ public class FlatDbService {
     }
 
     @Transactional
+    public void saveAll(List<Flat> flats) {
+        flatRepository.saveAll(flats.stream().map(mapper::toFlatDao).toList());
+    }
+
+    @Transactional
     public void deleteById(Long id) {
         flatRepository.deleteById(id);
     }
