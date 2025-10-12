@@ -5,13 +5,49 @@ plugins {
     id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("io.freefair.lombok") version "8.14.2"
-    id("org.openapi.generator") version "7.4.0"
+    id("org.openapi.generator") version "7.8.0"
 
 }
 
 group = "com.maxim"
 version = "0.0.1-SNAPSHOT"
 description = "lab2"
+
+openApiGenerate {
+    generatorName.set("spring")
+    skipOperationExample.set(true)
+
+    globalProperties.apply {
+        put("modelDocs", "true")
+        put("generateSupportingFiles", "true")
+    }
+
+    configOptions.apply {
+        put("useBeanValidation", "true")
+        put("modelMutable", "false")
+        put("gradleBuildFile", "false")
+        put("interfaceOnly", "true")
+        put("serializationLibrary", "jackson")
+        put("enumPropertyNaming", "UPPERCASE")
+        put("useSpringBoot3", "true")
+        put("useTags", "true")
+
+        // Опции, характерные только для Java
+        put("hideGenerationTimestamp", "true")
+        put("sourceFolder", "src/gen/java")
+        put("library", "spring-boot")
+    }
+
+    inputSpec.set("${layout.projectDirectory}/../contract.yaml")
+    outputDir.set("${layout.buildDirectory.asFile.get()}/generated/openapi")
+
+    val packageString = "com.maxim.api"
+    packageName.set(packageString)
+    apiPackage.set("$packageString.api")
+    invokerPackage.set("$packageString.invoker")
+    modelPackage.set("$packageString.model")
+}
+
 
 java {
     toolchain {
@@ -44,47 +80,19 @@ dependencies {
 
 tasks.withType<Jar> {
     enabled = true
-    archiveFileName.set("lab1.jar")
+    archiveFileName.set("lab2.jar")
     manifest {
         attributes["Main-Class"] = "com.maxim.lab1.Lab1Application"
-    }
-}
-
-tasks.register<GenerateTask>("generateCleanModels") {
-    generatorName.set("java")
-    inputSpec.set("$rootDir/../contract.yaml")
-    outputDir.set("$buildDir/temp-generated") // Генерируем во временную папку
-    modelPackage.set("com.example.model")
-
-    globalProperties.set(mapOf("models" to ""))
-    configOptions.set(
-        mapOf(
-            "useBeanValidation" to "true",
-            "openApiNullable" to "false"
-        )
-    )
-
-    doLast {
-        // Копируем только модели в финальную папку
-        copy {
-            from("$buildDir/temp-generated/src/main/java/com/example/model")
-            into("$buildDir/generated/src/main/java/com/example/model")
-        }
-        // Удаляем временную папку со всем мусором
-        delete("$buildDir/temp-generated")
     }
 }
 
 sourceSets {
     main {
         java {
-            srcDir("$buildDir/generated/src/main/java")
+            // подключаем путь, где лежит сгенерированный код OpenAPI
+            srcDir("$buildDir/generated/openapi/src/gen/java")
         }
     }
-}
-
-tasks.compileJava {
-    dependsOn(tasks.named("generateCleanModels"))
 }
 
 

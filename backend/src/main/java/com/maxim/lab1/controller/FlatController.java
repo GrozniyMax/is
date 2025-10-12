@@ -1,12 +1,10 @@
 package com.maxim.lab1.controller;
 
-import com.maxim.lab1.controller.dto.DtoMapper;
-import com.maxim.lab1.controller.dto.FlatDto;
-import com.maxim.lab1.controller.dto.ValidationGroups;
+import com.maxim.api.model.FlatDto;
+
 import com.maxim.lab1.service.FlatService;
 import com.maxim.lab1.service.RemovalService;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,10 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +40,7 @@ public class FlatController {
     }
 
     @PostMapping("/update")
-    public void updateFlat(@Valid @Validated(ValidationGroups.Update.class) FlatDto flatDto,
+    public void updateFlat(@Valid FlatDto flatDto,
                              @RequestParam(value = "link", required = false, defaultValue = "false") Boolean link) {
 
         flatService.updateFlat(mapper.toFlat(flatDto), link);

@@ -1,5 +1,8 @@
-package com.maxim.lab1.controller.dto;
+package com.maxim.lab1.controller;
 
+import com.maxim.api.model.CoordinatesDto;
+import com.maxim.api.model.FlatDto;
+import com.maxim.api.model.HouseDto;
 import com.maxim.lab1.model.Coordinates;
 import com.maxim.lab1.model.Flat;
 import com.maxim.lab1.model.House;
