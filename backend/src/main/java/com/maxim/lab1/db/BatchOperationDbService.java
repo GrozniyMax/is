@@ -1,9 +1,8 @@
 package com.maxim.lab1.db;
 
-import com.maxim.lab1.db.model.DaoMapper;
+import com.maxim.lab1.db.model.mapping.DaoMapper;
 import com.maxim.lab1.db.repository.BatchOperationRepository;
 import com.maxim.lab1.model.BatchOperation;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

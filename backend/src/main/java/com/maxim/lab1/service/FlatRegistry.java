@@ -1,9 +1,7 @@
 package com.maxim.lab1.service;
 
 import com.maxim.lab1.db.FlatDbService;
-import com.maxim.lab1.db.model.FlatDao;
 import com.maxim.lab1.model.Flat;
-import jakarta.persistence.TableGenerator;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.AccessLevel;
@@ -13,12 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+/**
+ * Сервис для управления {@link Flat} в ьазе
+ */
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class FlatService {
+public class FlatRegistry {
 
     FlatDbService flatDbService;
 

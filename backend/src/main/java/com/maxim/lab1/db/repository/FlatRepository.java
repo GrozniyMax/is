@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -27,4 +28,7 @@ public interface FlatRepository extends PagingAndSortingRepository<FlatDao, Long
 
     @Query("SELECT SUM(f.price) FROM flat f")
     long getTotalCost();
+
+    @Query("SELECT flat f FROM flat WHERE f.house.id = :houseId ORDER BY f.creationDate LIMIT 1")
+    Optional<FlatDao> findFirstCreatedWithHouse(Long houseId);
 }
