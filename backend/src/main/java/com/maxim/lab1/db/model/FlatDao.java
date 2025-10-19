@@ -35,11 +35,6 @@ public class FlatDao {
     @NotEmpty(message = ValidationMessages.STRING_NOT_EMPTY)
     private String name; //Поле не может быть null, Строка не может быть пустой
 
-    @NotNull(message = ValidationMessages.NOT_NULL)
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "coordinates_id", nullable = false)
-    private CoordinatesDao coordinates; //Поле не может быть null
-
     @Column(name = "creation_date", nullable = false, updatable = false)
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 

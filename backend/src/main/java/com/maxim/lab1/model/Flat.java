@@ -22,7 +22,6 @@ import java.time.ZonedDateTime;
 public record Flat(
         Long id,
         String name,
-        Coordinates coordinates,
         ZonedDateTime creationDate,
         Float area,
         Long price,

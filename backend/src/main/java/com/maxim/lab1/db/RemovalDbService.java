@@ -1,6 +1,5 @@
 package com.maxim.lab1.db;
 
-import com.maxim.lab1.db.repository.CoordinatesRepository;
 import com.maxim.lab1.db.repository.FlatRepository;
 import com.maxim.lab1.db.repository.HouseRepository;
 import jakarta.validation.ValidationException;
@@ -15,14 +14,12 @@ import org.springframework.stereotype.Service;
 public class RemovalDbService {
 
     FlatRepository flatRepository;
-    CoordinatesRepository coordinatesRepository;
     HouseRepository houseRepository;
 
     public void removeById(String entityType, Long id) {
         try {
             switch (entityType) {
                 case "flat" -> flatRepository.deleteById(id);
-                case "coordinates" -> coordinatesRepository.deleteById(id);
                 case "house" -> houseRepository.deleteById(id);
             }
         } catch (Exception e) {

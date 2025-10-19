@@ -14,6 +14,7 @@ public record House(
         String name,
         long year,
         int numberOfFlatsOnFloor,
-        long numberOfLifts){
+        long numberOfLifts,
+        Coordinates coordinates){
 
 }

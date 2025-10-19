@@ -2,8 +2,6 @@ package com.maxim.lab1.db;
 
 import com.maxim.lab1.db.model.DaoMapper;
 import com.maxim.lab1.db.model.FlatDao;
-import com.maxim.lab1.db.model.HouseDao;
-import com.maxim.lab1.db.repository.CoordinatesRepository;
 import com.maxim.lab1.db.repository.FlatRepository;
 import com.maxim.lab1.db.repository.HouseRepository;
 import com.maxim.lab1.model.Flat;
@@ -16,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
-import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +28,6 @@ public class FlatDbService {
     DaoMapper mapper;
 
     FlatRepository flatRepository;
-    CoordinatesRepository coordinatesRepository;
     HouseRepository houseRepository;
 
     @Transactional
@@ -102,23 +97,13 @@ public class FlatDbService {
         return flatRepository.getTotalCost();
     }
 
-
-
     private void link(FlatDao flat) {
-        coordinatesRepository.findByXAndY(flat.getCoordinates().getX(), flat.getCoordinates().getY())
-                .ifPresent(flat::setCoordinates);
-
-        houseRepository.findByNameAndYearAndNumberOfFlatsOnFloorAndNumberOfLifts(
-                flat.getHouse().getName(),
-                flat.getHouse().getYear(),
-                flat.getHouse().getNumberOfFlatsOnFloor(),
-                flat.getHouse().getNumberOfLifts()
-        ).ifPresent(flat::setHouse);
+        houseRepository.findById(flat.getHouse().getId())
+                .ifPresent(flat::setHouse);
     }
 
     private void notLink(FlatDao flat) {
         // Чтобы JPA точно посчитал новыми объекты
-        flat.getCoordinates().setId(null);
         flat.getHouse().setId(null);
     }
 
