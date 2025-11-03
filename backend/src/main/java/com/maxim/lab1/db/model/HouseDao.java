@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.geo.Polygon;
+import org.locationtech.jts.geom.Polygon;
 
 @Getter @Setter
 @Entity(name = "house")

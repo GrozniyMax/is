@@ -14,6 +14,21 @@ tags:
 
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+          description: Код ошибки
+        message:
+          type: string
+          example: "Неверные данные запроса"
+          description: Сообщение об ошибке
+
     FlatDto:
       type: object
       required:
@@ -80,7 +95,7 @@ components:
           type: boolean
           description: Наличие центрального отопления
         transport:
-          $ref: '#/components/schemas/Transport'
+          $ref: '#/components/schemas/TransportDto'
         house:
           $ref: '#/components/schemas/HouseDto'
 
@@ -139,7 +154,7 @@ components:
           type: boolean
           description: Наличие центрального отопления
         transport:
-          $ref: '#/components/schemas/Transport'
+          $ref: '#/components/schemas/TransportDto'
         house:
           $ref: '#/components/schemas/HouseDto'
 
@@ -210,13 +225,12 @@ components:
           example: 45.6
           description: Координата Y
 
-    Transport:
+    TransportDto:
       type: string
       enum:
-        - NONE
         - FEW
         - NORMAL
-        - A_LOT
+        - LITTLE
       description: Уровень транспортной доступности
 
     BatchOperationDto:
@@ -296,6 +310,18 @@ paths:
                     type: integer
                   number:
                     type: integer
+        '400':
+          description: Неверные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /flats/create:
     post:
@@ -321,6 +347,16 @@ paths:
           description: Квартира успешно создана
         '400':
           description: Неверные данные запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /flats/update:
     post:
@@ -346,8 +382,22 @@ paths:
           description: Квартира успешно обновлена
         '400':
           description: Неверные данные запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Квартира не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /flats/{id}:
     delete:
@@ -365,8 +415,24 @@ paths:
       responses:
         '204':
           description: Квартира успешно удалена
+        '400':
+          description: Неверный ID квартиры
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Квартира не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /flats/upload:
     post:
@@ -396,8 +462,16 @@ paths:
           description: Файл успешно загружен и обработан
         '400':
           description: Неверный формат файла или данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Ошибка при обработке файла
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /flats/{user}:
     get:
@@ -422,6 +496,16 @@ paths:
                   $ref: '#/components/schemas/BatchOperationDto'
         '404':
           description: Пользователь не найден или операции отсутствуют
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /findCountByHouseGreaterThan:
     post:
@@ -446,6 +530,16 @@ paths:
                 description: Количество квартир
         '400':
           description: Неверные данные запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /findMostExpensive:
     get:
@@ -484,8 +578,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FlatDto'
+        '400':
+          description: Неверные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Квартиры не найдены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /findTotalCost:
     get:
@@ -502,3 +612,9 @@ paths:
                 format: int64
                 example: 150000000
                 description: Общая стоимость всех квартир
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

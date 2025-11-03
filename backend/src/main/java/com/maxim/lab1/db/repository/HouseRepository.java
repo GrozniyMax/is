@@ -1,7 +1,7 @@
 package com.maxim.lab1.db.repository;
 
 import com.maxim.lab1.db.model.HouseDao;
-import org.springframework.data.geo.Polygon;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,6 +1,6 @@
 package com.maxim.lab1.db;
 
-import com.maxim.lab1.db.model.DaoMapper;
+import com.maxim.lab1.db.model.mapping.DaoMapper;
 import com.maxim.lab1.db.model.FlatDao;
 import com.maxim.lab1.db.repository.FlatRepository;
 import com.maxim.lab1.db.repository.HouseRepository;
@@ -63,6 +63,10 @@ public class FlatDbService {
 
     public Page<Flat> findAll(Pageable pageable) {
         return flatRepository.findAll(pageable).map(mapper::toFlat);
+    }
+
+    public Optional<Flat> getFirstByHouseId(Long houseId) {
+        return flatRepository.findFirstCreatedWithHouse(houseId).map(mapper::toFlat);
     }
 
     public long findCountByHouseGreaterThan(House house) {

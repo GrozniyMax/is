@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ public class BatchOperationDao {
     @Column(nullable = false)
     private String owner;
 
-    private LocalDateTime creationData;
+    private ZonedDateTime creationData;
 
     private Boolean success;
 }

@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.With;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public record BatchOperation(
         String user,
-        LocalDateTime creationData,
+        ZonedDateTime creationData,
         boolean success
 ) {
 }

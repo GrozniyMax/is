@@ -4,8 +4,14 @@ import com.maxim.is.generated.dto.*;
 import com.maxim.lab1.model.*;
 import org.mapstruct.Mapper;
 
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+
 @Mapper(componentModel = "spring")
 public interface DtoMapper {
+
+    TransportDto toTransportDto(Transport transport);
+    Transport toTransport(TransportDto transportDto);
 
     PointDto toPointDto(Point point);
     Point toPoint(PointDto pointDto);
@@ -21,5 +27,13 @@ public interface DtoMapper {
     Flat toFlat(FlatDto flatDto);
 
     BatchOperationDto toBatchOperationDto(BatchOperation batchOperation);
+
+    default OffsetDateTime toOffsetDateTime(ZonedDateTime dateTime) {
+        return dateTime.toOffsetDateTime();
+    }
+
+    default ZonedDateTime toZonedDateTime(OffsetDateTime dateTime) {
+        return dateTime.toZonedDateTime();
+    }
 
 }

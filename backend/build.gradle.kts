@@ -55,8 +55,6 @@ repositories {
 dependencies {
     // starters
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.hibernate.orm:hibernate-spatial:6.6.26.Final")
-    implementation("io.swagger.core.v3:swagger-annotations:2.2.18")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -67,6 +65,10 @@ dependencies {
     //Mapstruct
     implementation("org.mapstruct:mapstruct:1.6.3") // Use the latest stable version
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3") // Use the same version
+
+    // Others
+    implementation("org.hibernate.orm:hibernate-spatial:6.6.26.Final")
+    implementation("io.swagger.core.v3:swagger-annotations:2.2.18")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
