@@ -1,9 +1,3 @@
 .gradle
 .idea
 build
-
-backend/build
-backend/.idea
-backend/.gradle
-backend/gradlew.bat
-backend/gradlew
