@@ -1,38 +1,40 @@
 package com.maxim.lab1.controller;
 
-import com.maxim.api.model.FlatDto;
-import com.maxim.api.model.HouseDto;
+
+import com.maxim.is.generated.dto.FlatDto;
+import com.maxim.is.generated.dto.HouseDto;
+import com.maxim.is.generated.openapi.api.SpecialOperationsApi;
 import com.maxim.lab1.service.SpecialOperationsService;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
-@RestController("/operations")
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class SpecialOperationsController {
+public class SpecialOperationsController implements SpecialOperationsApi {
 
     SpecialOperationsService specialOperationsService;
 
     DtoMapper mapper;
 
-    @PostMapping("/findCountByHouseGreaterThan")
-    public long findCountByHouseGreaterThan(@Valid HouseDto house) {
-        return specialOperationsService.findCountByHouseGreaterThan(mapper.toHouse(house));
+    @Override
+    public ResponseEntity<Long> findCountByHouseGreaterThanPost(HouseDto houseDto) {
+        return ResponseEntity.ok(specialOperationsService.findCountByHouseGreaterThan(mapper.toHouse(houseDto)));
     }
 
-    @GetMapping("/findMostExpensive")
-    public FlatDto findMostExpensive(
-            @RequestParam("id1") Long id1,
-            @RequestParam("id2") Long id2,
-            @RequestParam("id3") Long id3) {
-        return specialOperationsService.findMostExpensive(id1, id2, id3).map(mapper::toFlatDto).orElse(null);
+    @Override
+    public ResponseEntity<FlatDto> findMostExpensiveGet(Long id1, Long id2, Long id3) {
+        return specialOperationsService.findMostExpensive(id1, id2, id3)
+                .map(mapper::toFlatDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/findTotalCost")
-    public long findTotalCost() {
-        return specialOperationsService.findTotalCost();
+    @Override
+    public ResponseEntity<Long> findTotalCostGet() {
+        return ResponseEntity.ok(specialOperationsService.findTotalCost());
     }
 }

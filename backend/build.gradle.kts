@@ -1,5 +1,3 @@
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-
 plugins {
     java
     id("org.springframework.boot") version "3.5.5"
@@ -9,43 +7,38 @@ plugins {
 
 }
 
-group = "com.maxim"
+group = "com.maxim.is"
 version = "0.0.1-SNAPSHOT"
 description = "lab2"
 
 openApiGenerate {
     generatorName.set("spring")
-    skipOperationExample.set(true)
+    library.set("spring-boot")
+    generateApiTests.set(false)
+    generateApiDocumentation.set(false) // Отключаем генерацию документации если не нужна
 
-    globalProperties.apply {
-        put("modelDocs", "true")
-        put("generateSupportingFiles", "true")
-    }
+    inputSpec.set("$rootDir/../contract.yaml")
+    outputDir.set("${layout.buildDirectory.get()}/generated/openapi")
+    apiPackage.set("com.maxim.is.generated.openapi.api")
+    modelPackage.set("com.maxim.is.generated.dto")
+    invokerPackage.set("com.maxim.is.generated.openapi.invoker")
 
-    configOptions.apply {
-        put("useBeanValidation", "true")
-        put("modelMutable", "false")
-        put("gradleBuildFile", "false")
-        put("interfaceOnly", "true")
-        put("serializationLibrary", "jackson")
-        put("enumPropertyNaming", "UPPERCASE")
-        put("useSpringBoot3", "true")
-        put("useTags", "true")
+    configOptions.set(
+        mapOf(
+            "useBeanValidation" to "true",
+            "useSpringBoot3" to "true",
+            "interfaceOnly" to "true",
+            "useTags" to "true",
+            "skipDefaultInterface" to "true",
+            "openApiNullable" to "false",
+            "serializationLibrary" to "jackson",
+            "requestMappingModel" to "api_interfaces"
+        )
+    )
+}
 
-        // Опции, характерные только для Java
-        put("hideGenerationTimestamp", "true")
-        put("sourceFolder", "src/gen/java")
-        put("library", "spring-boot")
-    }
-
-    inputSpec.set("${layout.projectDirectory}/../contract.yaml")
-    outputDir.set("${layout.buildDirectory.asFile.get()}/generated/openapi")
-
-    val packageString = "com.maxim.api"
-    packageName.set(packageString)
-    apiPackage.set("$packageString.api")
-    invokerPackage.set("$packageString.invoker")
-    modelPackage.set("$packageString.model")
+tasks {
+    compileJava.get().dependsOn(openApiGenerate)
 }
 
 
@@ -63,8 +56,7 @@ dependencies {
     // starters
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.hibernate.orm:hibernate-spatial:6.6.26.Final")
-
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("io.swagger.core.v3:swagger-annotations:2.2.18")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -92,7 +84,7 @@ sourceSets {
     main {
         java {
             // подключаем путь, где лежит сгенерированный код OpenAPI
-            srcDir("$buildDir/generated/openapi/src/gen/java")
+            srcDir("${layout.buildDirectory.get()}/generated/openapi/src/main/java")
         }
     }
 }
