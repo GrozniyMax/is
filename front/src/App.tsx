@@ -1,23 +1,25 @@
 import './App.css'
-import {BrowserRouter, Link, Navigate, Route, Routes} from "react-router-dom";
-import {FlatForm} from "./components/forms/Form.tsx";
-import {DataTable} from "./components/table/Table.tsx";
+import {BrowserRouter, Link, Routes} from "react-router-dom";
+import {BatchRoutes, SingleRoutes} from "./components/Routes.tsx";
+import {Route} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
 function App() {
 
     return (
         <BrowserRouter>
             <nav>
-                <Link to="/update">Обновить</Link>
-                <Link to="/create">Создать</Link>
-                <Link to="/table">Таблица элементов</Link>
+                <Link to="/single/update">Обновить элемент</Link>
+                <Link to="/single/create">Создать элемент</Link>
+                <Link to="/single/table">Таблица элементов</Link>
+                <Link to={"/batch/form"}>Пакетная вставка</Link>
             </nav>
+
 
             <Routes>
                 <Route path="/" element={<Navigate to="/table" replace={true} />} />
-                <Route path="/update" element={<FlatForm type={"update"} initialValues={null} />} />
-                <Route path="/create" element={<FlatForm type={"create"} initialValues={null}/>} />
-                <Route path="/table" element={<DataTable />} />
+                <BatchRoutes />
+                <SingleRoutes />
             </Routes>
         </BrowserRouter>
     );

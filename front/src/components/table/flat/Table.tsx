@@ -1,11 +1,8 @@
 import {useEffect, useState} from "react";
-import {getData} from "../../client/Client.ts";
 import {useNavigate} from "react-router-dom";
 import {Header, type HeaderProps} from "./Header.tsx";
 import {TooltipCell} from "./TooltipCell.tsx";
-import type {components} from "../../client/dto/types.d.ts";
-
-type FlatDto = components["schemas"]["FlatDto"]
+import {type FlatDto, FlatService} from "../../../../generated/api";
 
 export function DataTable() {
     const [data, setData] = useState<FlatDto[]>([]);
@@ -35,14 +32,11 @@ export function DataTable() {
     useEffect(() => {
         setLoading(true);
 
-        getData(Number(page), Number(size), field, order, filter)
+        FlatService.getFlatsPage(filter, Number(page), Number(size), `${field},${order}`)
             .then((res) => {
-                setData(res);
+                setData(res.content ?? [])
             })
-            .catch((error) => {
-                console.error("Ошибка при загрузке данных:", error);
-            })
-            .finally(() => setLoading(false));
+
         console.log("Page", page)
         console.log("Size", size)
         console.log("Order", order)
@@ -86,14 +80,6 @@ export function DataTable() {
                                 <tr key={row.id}>
                                     <td onClick={() => navigate("/update")}>{row.id}</td>
                                     <td>{row.name}</td>
-                                    <td>
-                                        <TooltipCell text={row.coordinates.id} tooltip={
-                                            <ul className="list-disc pl-5">
-                                                <li>X = {row.coordinates.x}</li>
-                                                <li>Y = {row.coordinates.y}</li>
-                                            </ul>
-                                        }/>
-                                    </td>
                                     <td>{row.creationDate}</td>
                                     <td>{row.area}</td>
                                     <td>{row.price}</td>
@@ -104,12 +90,23 @@ export function DataTable() {
                                     <td>{String(row.centralHeating)}</td>
                                     <td>{row.transport}</td>
                                     <td>
-                                        <TooltipCell text={row.house.id} tooltip={
+                                        <TooltipCell text={row.house.id + ""} tooltip={
                                             <ul className="list-disc pl-5">
                                                 <li>Name = {row.house.name}</li>
                                                 <li>Year = {row.house.year}</li>
                                                 <li>NumberOfFlatsOnFloor = {row.house.numberOfFlatsOnFloor}</li>
                                                 <li>NumberOfLifts = {row.house.numberOfLifts}</li>
+                                                <li>
+                                                    Координаты
+                                                    <ul>
+                                                        <li>
+                                                            ({row.house.coordinates.first.x}, {row.house.coordinates.first.y})
+                                                        </li>
+                                                        <li>
+                                                            ({row.house.coordinates.second.x}, {row.house.coordinates.second.y})
+                                                        </li>
+                                                    </ul>
+                                                </li>
                                             </ul>
                                         }/>
                                     </td>

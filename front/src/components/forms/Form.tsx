@@ -1,14 +1,12 @@
-import {Formik, Form, Field, ErrorMessage} from "formik";
+import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-import type {components} from "../../client/dto/types.d.ts";
+
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import {createFlat, updateFlat} from "../../client/Client.ts";
+import {type FlatDto, TransportDto, FlatService, type FlatCreateDto} from "../../../generated/api";
 
 // Enums
-const transportOptions = ["NONE", "FEW", "NORMAL", "A_LOT"] as const;
-
-export type FlatDto = components["schemas"]["FlatDto"]
+const transportOptions = ["LITTLE", "FEW", "NORMAL"] as const;
 
 // 🔍 Валидация
 const createValidationSchema = Yup.object().shape({
@@ -101,20 +99,29 @@ const updateValidationSchema = Yup.object().shape({
 
 const baseInitial: FlatDto = {
     name: "",
-    coordinates: {x: 0, y: 0},
     area: 0,
     price: 0,
     balcony: false,
-    timeToMetroOnFoot: undefined,
+    timeToMetroOnFoot: 0,
     numberOfRooms: 1,
     floor: 1,
     centralHeating: false,
-    transport: "NONE",
+    transport: TransportDto.FEW,
     house: {
         name: "",
         year: 2000,
         numberOfFlatsOnFloor: 1,
         numberOfLifts: 1,
+        coordinates: {
+            first: {
+                x: 0,
+                y: 0
+            },
+            second: {
+                x: 0,
+                y: 0
+            }
+        }
     },
 };
 
@@ -130,18 +137,23 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
     const [link, setLink] = useState(false);
 
     function onSubmit(value: FlatDto) {
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, ...rest } = value;
+        const creationDto: FlatCreateDto = rest;
+
         const submitPromise = type === "update"
-            ? updateFlat(value, link)
-            : createFlat(value, link);
+            ? FlatService.postFlatsUpdate(value, link)
+            : FlatService.postFlatsCreate(creationDto, link)
 
         submitPromise
             .then(() => {
                 alert("Успешно сохранено");
                 navigate("/table");
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error("Ошибка:", error);
-                alert("Ошибка при сохранении");
+                alert(`Ошибка при сохранении: ${error.message}`);
             });
     }
 
