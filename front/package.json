@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "generate:types": "openapi-typescript ../contract.yaml -o src/client/dto/types.d.ts",
-    "prebuild": "npm run generate:types",
-    "predev": "npm run generate:types",
+    "generate:client": "rimraf generated/api && openapi --input ../contract.yaml --output generated/api --client axios",
+    "prebuild": "npm run generate:client",
+    "predev": "npm run generate:client",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -18,7 +18,8 @@
     "react-dom": "^19.1.1",
     "react-router-dom": "^6.23.1",
     "tailwindcss": "^3.4.3",
-    "yup": "^1.7.1"
+    "yup": "^1.7.1",
+    "axios": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -31,7 +32,8 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
     "openapi-typescript": "^6.0.0",
-    "openapi-typescript-codegen": "^0.23.0",
+    "openapi-typescript-codegen": "^0.29.0",
+    "rimraf": "^5.0.0",
     "postcss": "^8.4.38",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.44.0",
