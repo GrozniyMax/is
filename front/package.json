@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "generate:client": "rimraf generated/api && openapi --input ../contract.yaml --output generated/api --client axios",
+    "generate:client": "rimraf generated/api && openapi --input ../contract.yaml --output generated/api --client axios --useUnionTypes",
     "prebuild": "npm run generate:client",
     "predev": "npm run generate:client",
     "build": "tsc -b && vite build",

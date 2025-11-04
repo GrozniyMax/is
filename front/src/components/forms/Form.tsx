@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import {type FlatDto, TransportDto, FlatService, type FlatCreateDto} from "../../../generated/api";
+import {type FlatDto, FlatService, type FlatCreateDto} from "../../../generated/api";
 import "../styles/forms.css";
 
 // Enums
@@ -122,7 +122,7 @@ const baseInitial: FlatDto = {
     numberOfRooms: 1,
     floor: 1,
     centralHeating: false,
-    transport: TransportDto.FEW,
+    transport: "FEW",
     house: {
         name: "",
         year: 2000,

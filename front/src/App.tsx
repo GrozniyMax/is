@@ -2,7 +2,6 @@ import './App.css'
 import {BrowserRouter, Link, Navigate, Routes} from "react-router-dom";
 import {BatchRoutes, SingleRoutes} from "./components/Routes.tsx";
 import {Route} from "react-router-dom";
-import {OpenAPI} from "../generated/api";
 
 // // Для разработки с прокси
 // OpenAPI.BASE = '/api';
