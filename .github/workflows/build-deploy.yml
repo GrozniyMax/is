@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - lab1
 
 jobs:
   build-deploy:
