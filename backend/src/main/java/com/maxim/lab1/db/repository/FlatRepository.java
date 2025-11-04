@@ -29,6 +29,6 @@ public interface FlatRepository extends PagingAndSortingRepository<FlatDao, Long
     @Query("SELECT SUM(f.price) FROM flat f")
     long getTotalCost();
 
-    @Query("SELECT flat f FROM flat WHERE f.house.id = :houseId ORDER BY f.creationDate LIMIT 1")
-    Optional<FlatDao> findFirstCreatedWithHouse(Long houseId);
+    @Query("SELECT f FROM flat f WHERE f.house.id = :houseId ORDER BY f.creationDate ASC")
+    List<FlatDao> findFirstCreatedWithHouse(Long houseId, Pageable pageable);
 }

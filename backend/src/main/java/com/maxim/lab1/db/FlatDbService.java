@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -66,7 +67,10 @@ public class FlatDbService {
     }
 
     public Optional<Flat> getFirstByHouseId(Long houseId) {
-        return flatRepository.findFirstCreatedWithHouse(houseId).map(mapper::toFlat);
+        var result = flatRepository.findFirstCreatedWithHouse(houseId, PageRequest.of(0, 1));
+
+        return Optional.ofNullable(result.isEmpty() ? null: result.get(0))
+                .map(mapper::toFlat);
     }
 
     public long findCountByHouseGreaterThan(House house) {
