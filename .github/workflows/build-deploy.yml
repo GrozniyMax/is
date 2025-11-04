@@ -55,6 +55,7 @@ jobs:
           SERVER_PORT: ${{ secrets.SERVER_PORT }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+          SERVER_BASE_PATH: ${{ secrets.SERVER_BASE_PATH }}
         run: |
           # Backend JAR
           BACKEND_JAR=$(ls backend/build/libs/*.jar)
@@ -64,4 +65,4 @@ jobs:
 
           # Frontend dist
           echo "Deploying frontend..."
-          sshpass -p "$SERVER_PASSWORD" scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $SERVER_PORT front/dist/* "${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/public_html/build/"
+          sshpass -p "$SERVER_PASSWORD" scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $SERVER_PORT front/dist/* "${SERVER_USER}@${SERVER_HOST}:${SERVER_BASE_PATH}/public_html/build/"
