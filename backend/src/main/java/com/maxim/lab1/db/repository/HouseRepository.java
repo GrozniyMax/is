@@ -16,7 +16,7 @@ public interface HouseRepository extends JpaRepository<HouseDao, Long> {
             SELECT EXISTS(
                 SELECT 1
                 FROM house h
-                WHERE intersects(h.coordinates, :searchPolygon) = true
+                WHERE intersects(h.coordinates, :coordinates) = true
                 )
     """)
     Boolean existsByCoordinates(Polygon coordinates);

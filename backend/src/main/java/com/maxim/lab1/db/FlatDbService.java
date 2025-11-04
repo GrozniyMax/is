@@ -46,7 +46,11 @@ public class FlatDbService {
 
     @Transactional
     public void saveAll(List<Flat> flats) {
-        flatRepository.saveAll(flats.stream().map(mapper::toFlatDao).toList());
+        flatRepository.saveAll(flats.stream()
+                .map(mapper::toFlatDao)
+                .peek(flatDao -> flatDao.setId(null))
+                .peek(this::notLink)
+                .toList());
     }
 
     @Transactional
@@ -69,16 +73,16 @@ public class FlatDbService {
     public Optional<Flat> getFirstByHouseId(Long houseId) {
         var result = flatRepository.findFirstCreatedWithHouse(houseId, PageRequest.of(0, 1));
 
-        return Optional.ofNullable(result.isEmpty() ? null: result.get(0))
+        return Optional.ofNullable(result.isEmpty() ? null : result.get(0))
                 .map(mapper::toFlat);
     }
 
     public long findCountByHouseGreaterThan(House house) {
         var dao = houseRepository.findByNameAndYearAndNumberOfFlatsOnFloorAndNumberOfLifts(
-                house.name(),
-                house.year(),
-                house.numberOfFlatsOnFloor(),
-                house.numberOfLifts())
+                        house.name(),
+                        house.year(),
+                        house.numberOfFlatsOnFloor(),
+                        house.numberOfLifts())
                 .orElse(houseRepository.save(mapper.toHouseDao(house)));
 
         return flatRepository.findCountByHouseGreaterThan(dao);

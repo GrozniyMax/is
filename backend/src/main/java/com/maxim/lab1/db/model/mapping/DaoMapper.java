@@ -28,6 +28,9 @@ public abstract class DaoMapper {
     abstract public Flat toFlat(FlatDao flatDao);
     abstract public FlatDao toFlatDao(Flat flat);
 
+    @Mapping(source = "owner", target = "user")
     abstract public BatchOperation toBatchOperation(BatchOperationDao batchOperationDao);
+
+    @Mapping(source = "user", target = "owner")
     abstract public BatchOperationDao toBatchOperationDao(BatchOperation batchOperation);
 }
