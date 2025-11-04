@@ -40,3 +40,53 @@
 .read-the-docs {
   color: #888;
 }
+
+/* === Навигация сверху === */
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem; /* расстояние между ссылками */
+  background-color: #1e1e1e;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #333;
+  position: sticky; /* чтобы держалась сверху при прокрутке */
+  top: 0;
+  z-index: 1000;
+}
+
+/* === Ссылки в навигации === */
+nav a {
+  color: #5c9cff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+/* === Эффекты при наведении === */
+nav a:hover {
+  color: #a5c9ff;
+  transform: translateY(-2px);
+}
+
+/* === Активная ссылка === */
+nav a.active {
+  color: #ffffff;
+  border-bottom: 2px solid #5c9cff;
+  padding-bottom: 2px;
+}
+
+/* === Для мобильных экранов === */
+@media (max-width: 600px) {
+  nav {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  nav a {
+    font-size: 0.95rem;
+  }
+}
+

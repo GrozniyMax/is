@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {BatchService} from "../../../generated/api";
 import {useNavigate} from "react-router-dom";
+import "../styles/forms.css";
 
 
 interface UploadFormValues {

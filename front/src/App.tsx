@@ -2,7 +2,6 @@ import './App.css'
 import {BrowserRouter, Link, Routes} from "react-router-dom";
 import {BatchRoutes, SingleRoutes} from "./components/Routes.tsx";
 import {Route} from "react-router-dom";
-import {Navigate} from "react-router-dom";
 
 function App() {
 
@@ -17,9 +16,8 @@ function App() {
 
 
             <Routes>
-                <Route path="/" element={<Navigate to="/table" replace={true} />} />
-                <BatchRoutes />
-                <SingleRoutes />
+                <Route path="/batch/*" element={<BatchRoutes />} />
+                <Route path="/single/*" element={<SingleRoutes />} />
             </Routes>
         </BrowserRouter>
     );

@@ -22,28 +22,27 @@ export function BatchOperationTable() {
                        onChange={(e) => setName(e.target.value)}/>
                 Введите имя пользователя
             </label>
-            <table>
-                <thead>
+
+            {data.length === 0 ? (
+                <div>Нет данных</div>
+            ) : (
+                <table>
+                    <thead>
                     <tr>
                         <th>Дата создания</th>
                         <th>Успешно</th>
                     </tr>
-                </thead>
-                <tbody>
-                {
-                    data.map((row) => (
-                        <tr> {/* Добавьте key */}
+                    </thead>
+                    <tbody>
+                    {data.map((row, index) => (
+                        <tr key={index}> {/* Добавлен key */}
                             <td>{row.creationData}</td>
-                            <td>{row.success}</td>
+                            <td>{row.success ? 'Да' : 'Нет'}</td>
                         </tr>
-                    ))
-                }
-                </tbody>
-            </table>
+                    ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     )
-
-    //TODO добавить навигацию на форму
-
-
 }

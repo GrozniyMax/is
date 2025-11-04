@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {type FlatDto, TransportDto, FlatService, type FlatCreateDto} from "../../../generated/api";
+import "../styles/forms.css";
 
 // Enums
 const transportOptions = ["LITTLE", "FEW", "NORMAL"] as const;
@@ -11,12 +12,6 @@ const transportOptions = ["LITTLE", "FEW", "NORMAL"] as const;
 // 🔍 Валидация
 const createValidationSchema = Yup.object().shape({
     name: Yup.string().required("Название обязательно"),
-    coordinates: Yup.object().shape({
-        x: Yup.number().required("Координата X обязательна"),
-        y: Yup.number()
-            .moreThan(-166, "Координата Y должна быть больше -166")
-            .required("Координата Y обязательна"),
-    }),
     area: Yup.number()
         .moreThan(0, "Площадь должна быть больше 0")
         .required("Площадь обязательна"),
@@ -49,18 +44,18 @@ const createValidationSchema = Yup.object().shape({
         numberOfLifts: Yup.number()
             .moreThan(0, "Должно быть больше 0")
             .required("Количество лифтов обязательно"),
+        coordinates: Yup.object().shape({
+            x: Yup.number().required("Координата X обязательна"),
+            y: Yup.number()
+                .moreThan(-166, "Координата Y должна быть больше -166")
+                .required("Координата Y обязательна"),
+        }),
     }),
 });
 
 const updateValidationSchema = Yup.object().shape({
     id: Yup.number().min(0).required("Id обязателен для обновления"),
     name: Yup.string().required("Название обязательно"),
-    coordinates: Yup.object().shape({
-        x: Yup.number().required("Координата X обязательна"),
-        y: Yup.number()
-            .moreThan(-166, "Координата Y должна быть больше -166")
-            .required("Координата Y обязательна"),
-    }),
     area: Yup.number()
         .moreThan(0, "Площадь должна быть больше 0")
         .required("Площадь обязательна"),
@@ -93,6 +88,12 @@ const updateValidationSchema = Yup.object().shape({
         numberOfLifts: Yup.number()
             .moreThan(0, "Должно быть больше 0")
             .required("Количество лифтов обязательно"),
+        coordinates: Yup.object().shape({
+            x: Yup.number().required("Координата X обязательна"),
+            y: Yup.number()
+                .moreThan(-166, "Координата Y должна быть больше -166")
+                .required("Координата Y обязательна"),
+        }),
     }),
 });
 
@@ -139,7 +140,7 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
     function onSubmit(value: FlatDto) {
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { id, ...rest } = value;
+        const {id, ...rest} = value;
         const creationDto: FlatCreateDto = rest;
 
         const submitPromise = type === "update"
@@ -176,16 +177,6 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
                         <label>Название квартиры</label>
                         <Field name="name"/>
                         <ErrorMessage name="name" component="div"/>
-                    </div>
-
-                    <div>
-                        <label>Координаты X</label>
-                        <Field name="coordinates.x" type="number"/>
-                        <ErrorMessage name="coordinates.x" component="div"/>
-
-                        <label>Координаты Y</label>
-                        <Field name="coordinates.y" type="number"/>
-                        <ErrorMessage name="coordinates.y" component="div"/>
                     </div>
 
                     <div>
@@ -265,15 +256,26 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
                             <Field name="house.numberOfLifts" type="number"/>
                             <ErrorMessage name="house.numberOfLifts" component="div"/>
                         </div>
+
+                        <fieldset>
+                            <legend>Координаты</legend>
+                            <label>X</label>
+                            <Field name="house.coordinates.x" type="number"/>
+                            <ErrorMessage name="coordinates.x" component="div"/>
+
+                            <label>Y</label>
+                            <Field name="house.coordinates.y" type="number"/>
+                            <ErrorMessage name="coordinates.y" component="div"/>
+                        </fieldset>
                     </fieldset>
                     <button type="submit">Сохранить</button>
                 </Form>
             </Formik>
             <label>
                 <input
-                type="checkbox"
-                checked={link}
-                onChange={(e) => setLink(e.target.checked)}/>
+                    type="checkbox"
+                    checked={link}
+                    onChange={(e) => setLink(e.target.checked)}/>
                 Связать с существующими объектами
             </label>
         </>
