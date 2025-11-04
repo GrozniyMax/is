@@ -4,6 +4,10 @@ info:
   description: API для управления квартирами
   version: 1.0.0
 
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер разработки
+
 tags:
   - name: flat
     description: Операции с квартирами

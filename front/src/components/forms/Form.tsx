@@ -45,10 +45,18 @@ const createValidationSchema = Yup.object().shape({
             .moreThan(0, "Должно быть больше 0")
             .required("Количество лифтов обязательно"),
         coordinates: Yup.object().shape({
-            x: Yup.number().required("Координата X обязательна"),
-            y: Yup.number()
-                .moreThan(-166, "Координата Y должна быть больше -166")
-                .required("Координата Y обязательна"),
+            first: Yup.object().shape({
+                x: Yup.number().required("Координата X первой точки обязательна"),
+                y: Yup.number()
+                    .moreThan(-166, "Координата Y первой точки должна быть больше -166")
+                    .required("Координата Y первой точки обязательна"),
+            }),
+            second: Yup.object().shape({
+                x: Yup.number().required("Координата X второй точки обязательна"),
+                y: Yup.number()
+                    .moreThan(-166, "Координата Y второй точки должна быть больше -166")
+                    .required("Координата Y второй точки обязательна"),
+            }),
         }),
     }),
 });
@@ -89,14 +97,21 @@ const updateValidationSchema = Yup.object().shape({
             .moreThan(0, "Должно быть больше 0")
             .required("Количество лифтов обязательно"),
         coordinates: Yup.object().shape({
-            x: Yup.number().required("Координата X обязательна"),
-            y: Yup.number()
-                .moreThan(-166, "Координата Y должна быть больше -166")
-                .required("Координата Y обязательна"),
+            first: Yup.object().shape({
+                x: Yup.number().required("Координата X первой точки обязательна"),
+                y: Yup.number()
+                    .moreThan(-166, "Координата Y первой точки должна быть больше -166")
+                    .required("Координата Y первой точки обязательна"),
+            }),
+            second: Yup.object().shape({
+                x: Yup.number().required("Координата X второй точки обязательна"),
+                y: Yup.number()
+                    .moreThan(-166, "Координата Y второй точки должна быть больше -166")
+                    .required("Координата Y второй точки обязательна"),
+            }),
         }),
     }),
 });
-
 
 const baseInitial: FlatDto = {
     name: "",
@@ -138,9 +153,10 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
     const [link, setLink] = useState(false);
 
     function onSubmit(value: FlatDto) {
+        console.log("Форма отправлена!", value);
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const {id, ...rest} = value;
+        const {id, creationDate, ...rest} = value;
         const creationDto: FlatCreateDto = rest;
 
         const submitPromise = type === "update"
@@ -172,113 +188,154 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
             <h1>Форма для операции {type}</h1>
             <Formik initialValues={initialValues ?? baseInitial} validationSchema={resolveValidationSchema}
                     onSubmit={onSubmit}>
-                <Form>
-                    <div>
-                        <label>Название квартиры</label>
-                        <Field name="name"/>
-                        <ErrorMessage name="name" component="div"/>
-                    </div>
+                {() => (
+                    <Form>
+                        {type === "update" && (
+                            <div>
+                                <label>ID квартиры</label>
+                                <Field name="id" type="number" disabled/>
+                                <ErrorMessage name="id" component="div"/>
+                            </div>
+                        )}
 
-                    <div>
-                        <label>Площадь (м²)</label>
-                        <Field name="area" type="number"/>
-                        <ErrorMessage name="area" component="div"/>
-                    </div>
-
-                    <div>
-                        <label>Цена (₽)</label>
-                        <Field name="price" type="number"/>
-                        <ErrorMessage name="price" component="div"/>
-                    </div>
-
-                    <div>
-                        <label>Балкон</label>
-                        <Field name="balcony" type="checkbox"/>
-                    </div>
-
-                    <div>
-                        <label>Время до метро (мин)</label>
-                        <Field name="timeToMetroOnFoot" type="number"/>
-                        <ErrorMessage name="timeToMetroOnFoot" component="div"/>
-                    </div>
-
-                    <div>
-                        <label>Количество комнат</label>
-                        <Field name="numberOfRooms" type="number"/>
-                        <ErrorMessage name="numberOfRooms" component="div"/>
-                    </div>
-
-                    <div>
-                        <label>Этаж</label>
-                        <Field name="floor" type="number"/>
-                        <ErrorMessage name="floor" component="div"/>
-                    </div>
-
-                    <div>
-                        <label>Центральное отопление</label>
-                        <Field name="centralHeating" type="checkbox"/>
-                    </div>
-
-                    <div>
-                        <label>Транспорт</label>
-                        <Field as="select" name="transport">
-                            {transportOptions.map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </Field>
-                        <ErrorMessage name="transport" component="div"/>
-                    </div>
-
-                    <fieldset>
-                        <legend>Дом</legend>
                         <div>
-                            <label>Название дома</label>
-                            <Field name="house.name"/>
-                            <ErrorMessage name="house.name" component="div"/>
+                            <label>Название квартиры</label>
+                            <Field name="name"/>
+                            <ErrorMessage name="name" component="div"/>
                         </div>
 
                         <div>
-                            <label>Год постройки</label>
-                            <Field name="house.year" type="number"/>
-                            <ErrorMessage name="house.year" component="div"/>
+                            <label>Площадь (м²)</label>
+                            <Field name="area" type="number"/>
+                            <ErrorMessage name="area" component="div"/>
                         </div>
 
                         <div>
-                            <label>Квартир на этаже</label>
-                            <Field name="house.numberOfFlatsOnFloor" type="number"/>
-                            <ErrorMessage name="house.numberOfFlatsOnFloor" component="div"/>
+                            <label>Цена (₽)</label>
+                            <Field name="price" type="number"/>
+                            <ErrorMessage name="price" component="div"/>
                         </div>
 
                         <div>
-                            <label>Лифтов</label>
-                            <Field name="house.numberOfLifts" type="number"/>
-                            <ErrorMessage name="house.numberOfLifts" component="div"/>
+                            <label>Балкон</label>
+                            <Field name="balcony" type="checkbox"/>
+                        </div>
+
+                        <div>
+                            <label>Время до метро пешком (мин)</label>
+                            <Field name="timeToMetroOnFoot" type="number"/>
+                            <ErrorMessage name="timeToMetroOnFoot" component="div"/>
+                        </div>
+
+                        <div>
+                            <label>Количество комнат</label>
+                            <Field name="numberOfRooms" type="number"/>
+                            <ErrorMessage name="numberOfRooms" component="div"/>
+                        </div>
+
+                        <div>
+                            <label>Этаж</label>
+                            <Field name="floor" type="number"/>
+                            <ErrorMessage name="floor" component="div"/>
+                        </div>
+
+                        <div>
+                            <label>Центральное отопление</label>
+                            <Field name="centralHeating" type="checkbox"/>
+                        </div>
+
+                        <div>
+                            <label>Транспорт</label>
+                            <Field as="select" name="transport">
+                                {transportOptions.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </Field>
+                            <ErrorMessage name="transport" component="div"/>
                         </div>
 
                         <fieldset>
-                            <legend>Координаты</legend>
-                            <label>X</label>
-                            <Field name="house.coordinates.x" type="number"/>
-                            <ErrorMessage name="coordinates.x" component="div"/>
+                            <legend>Дом</legend>
+                            <div>
+                                <label>Название дома</label>
+                                <Field name="house.name"/>
+                                <ErrorMessage name="house.name" component="div"/>
+                            </div>
 
-                            <label>Y</label>
-                            <Field name="house.coordinates.y" type="number"/>
-                            <ErrorMessage name="coordinates.y" component="div"/>
+                            <div>
+                                <label>Год постройки</label>
+                                <Field name="house.year" type="number"/>
+                                <ErrorMessage name="house.year" component="div"/>
+                            </div>
+
+                            <div>
+                                <label>Квартир на этаже</label>
+                                <Field name="house.numberOfFlatsOnFloor" type="number"/>
+                                <ErrorMessage name="house.numberOfFlatsOnFloor" component="div"/>
+                            </div>
+
+                            <div>
+                                <label>Лифтов</label>
+                                <Field name="house.numberOfLifts" type="number"/>
+                                <ErrorMessage name="house.numberOfLifts" component="div"/>
+                            </div>
+
+                            <fieldset>
+                                <legend>Координаты дома</legend>
+
+                                <fieldset>
+                                    <legend>Первая точка</legend>
+                                    <div>
+                                        <label>Координата X</label>
+                                        <Field name="house.coordinates.first.x" type="number"/>
+                                        <ErrorMessage name="house.coordinates.first.x" component="div"/>
+                                    </div>
+
+                                    <div>
+                                        <label>Координата Y</label>
+                                        <Field name="house.coordinates.first.y" type="number"/>
+                                        <ErrorMessage name="house.coordinates.first.y" component="div"/>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset>
+                                    <legend>Вторая точка</legend>
+                                    <div>
+                                        <label>Координата X</label>
+                                        <Field name="house.coordinates.second.x" type="number"/>
+                                        <ErrorMessage name="house.coordinates.second.x" component="div"/>
+                                    </div>
+
+                                    <div>
+                                        <label>Координата Y</label>
+                                        <Field name="house.coordinates.second.y" type="number"/>
+                                        <ErrorMessage name="house.coordinates.second.y" component="div"/>
+                                    </div>
+                                </fieldset>
+                            </fieldset>
                         </fieldset>
-                    </fieldset>
-                    <button type="submit">Сохранить</button>
-                </Form>
+
+                        <button type="submit">Сохранить</button>
+                    </Form>
+                )}
             </Formik>
+
             <label>
                 <input
                     type="checkbox"
                     checked={link}
-                    onChange={(e) => setLink(e.target.checked)}/>
+                    onChange={(e) => setLink(e.target.checked)}
+                />
                 Связать с существующими объектами
             </label>
+
+            {/* Отладочная информация */}
+            <details style={{ marginTop: '20px' }}>
+                <summary>Отладочная информация (текущие значения формы)</summary>
+                <pre>{JSON.stringify(initialValues ?? baseInitial, null, 2)}</pre>
+            </details>
         </>
     );
 }
-

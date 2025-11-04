@@ -1,7 +1,11 @@
 import './App.css'
-import {BrowserRouter, Link, Routes} from "react-router-dom";
+import {BrowserRouter, Link, Navigate, Routes} from "react-router-dom";
 import {BatchRoutes, SingleRoutes} from "./components/Routes.tsx";
 import {Route} from "react-router-dom";
+import {OpenAPI} from "../generated/api";
+
+// // Для разработки с прокси
+// OpenAPI.BASE = '/api';
 
 function App() {
 
@@ -16,6 +20,7 @@ function App() {
 
 
             <Routes>
+                <Route path="/" element={<Navigate to="/single/table" replace={true} />} />
                 <Route path="/batch/*" element={<BatchRoutes />} />
                 <Route path="/single/*" element={<SingleRoutes />} />
             </Routes>

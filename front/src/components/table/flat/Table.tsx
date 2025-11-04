@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Header, type HeaderProps} from "./Header.tsx";
-import {TooltipCell} from "./TooltipCell.tsx";
 import {type FlatDto, FlatService} from "../../../../generated/api";
+import "./styles/DataTable.css"
 
 export function DataTable() {
     const [data, setData] = useState<FlatDto[]>([]);
@@ -34,13 +34,18 @@ export function DataTable() {
 
         FlatService.getFlatsPage(filter, Number(page), Number(size), `${field},${order}`)
             .then((res) => {
+                console.log("Received response", res)
                 setData(res.content ?? [])
+            })
+            .catch((err) => {
+                console.error(err);
             })
 
         console.log("Page", page)
         console.log("Size", size)
         console.log("Order", order)
         console.log("Field", field)
+        setLoading(false)
     }, [page, size, field, order, filter]); // будет вызываться при изменении этих значений
 
     return (
@@ -61,7 +66,6 @@ export function DataTable() {
                         <tr>
                             <Header {...buildHeaderParams("id")}/>
                             <Header {...buildHeaderParams("name")}/>
-                            <Header {...buildHeaderParams("coordinates")}/>
                             <Header {...buildHeaderParams("creationDate")}/>
                             <Header {...buildHeaderParams("area")}/>
                             <Header {...buildHeaderParams("price")}/>
@@ -90,25 +94,15 @@ export function DataTable() {
                                     <td>{String(row.centralHeating)}</td>
                                     <td>{row.transport}</td>
                                     <td>
-                                        <TooltipCell text={row.house.id + ""} tooltip={
-                                            <ul className="list-disc pl-5">
-                                                <li>Name = {row.house.name}</li>
-                                                <li>Year = {row.house.year}</li>
-                                                <li>NumberOfFlatsOnFloor = {row.house.numberOfFlatsOnFloor}</li>
-                                                <li>NumberOfLifts = {row.house.numberOfLifts}</li>
-                                                <li>
-                                                    Координаты
-                                                    <ul>
-                                                        <li>
-                                                            ({row.house.coordinates.first.x}, {row.house.coordinates.first.y})
-                                                        </li>
-                                                        <li>
-                                                            ({row.house.coordinates.second.x}, {row.house.coordinates.second.y})
-                                                        </li>
-                                                    </ul>
-                                                </li>
+                                        <ul>
+                                            <li>id - {row.house.id}</li>
+                                            <li>id - {row.house.year}</li>
+                                            <ul>
+                                                <li>first-{`(${row.house.coordinates.first.x}, ${row.house.coordinates.first.y})`}</li>
+                                                <li>second-{`(${row.house.coordinates.second.x}, ${row.house.coordinates.second.y})`}</li>
                                             </ul>
-                                        }/>
+
+                                        </ul>
                                     </td>
                                 </tr>
                             ))
