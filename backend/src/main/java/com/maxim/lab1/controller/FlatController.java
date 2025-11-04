@@ -14,8 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
-@Component
+@Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FlatController implements FlatApi {
@@ -42,7 +43,7 @@ public class FlatController implements FlatApi {
 
     @Override
     public ResponseEntity<FlatsPageGet200Response> flatsPageGet(String name, Integer page, Integer size, String sort) {
-        var resultPage = flatRegistry.getPage(PageRequest.of(page, size, Sort.by(sort)), name);
+        var resultPage = flatRegistry.getPage(PageRequest.of(page, size, resolveSort(sort)), name);
         return ResponseEntity.ok(new FlatsPageGet200Response()
                 .content(resultPage.map(mapper::toFlatDto).getContent())
                 .totalPages(resultPage.getTotalPages())
@@ -57,5 +58,10 @@ public class FlatController implements FlatApi {
         flatRegistry.updateFlat(mapper.toFlat(flatDto), link);
 
         return ResponseEntity.ok().build();
+    }
+
+    private Sort resolveSort(String sort) {
+        String[] split = sort.split(",");
+        return Sort.by(Sort.Direction.fromString(split[1]), split[0]);
     }
 }
