@@ -1,7 +1,7 @@
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {type FlatDto, FlatService, type FlatCreateDto} from "../../../generated/api";
 import "../styles/forms.css";
@@ -149,6 +149,12 @@ interface FormProps {
 export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const flat = location.state?.flat;
+
+// Если flat есть — берём его, иначе берём базовые значения
+    const initialState = flat || baseInitial;
 
     const [link, setLink] = useState(false);
 
@@ -166,7 +172,7 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
         submitPromise
             .then(() => {
                 alert("Успешно сохранено");
-                navigate("/table");
+                navigate("/single/table");
             })
             .catch(error => {
                 console.error("Ошибка:", error);
@@ -186,8 +192,8 @@ export const FlatForm: React.FC<FormProps> = ({type, initialValues}) => {
     return (
         <>
             <h1>Форма для операции {type}</h1>
-            <Formik initialValues={initialValues ?? baseInitial} validationSchema={resolveValidationSchema}
-                    onSubmit={onSubmit}>
+            <Formik initialValues={initialState} validationSchema={resolveValidationSchema}
+                    onSubmit={onSubmit} enableReinitialize={true}>
                 {() => (
                     <Form>
                         {type === "update" && (

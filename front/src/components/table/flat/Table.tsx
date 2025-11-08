@@ -82,7 +82,7 @@ export function DataTable() {
                         {
                             data.map((row) => (
                                 <tr key={row.id}>
-                                    <td onClick={() => navigate("/update")}>{row.id}</td>
+                                    <td onClick={() => navigate("/single/update", {state: {flat: row}})}>{row.id}</td>
                                     <td>{row.name}</td>
                                     <td>{row.creationDate}</td>
                                     <td>{row.area}</td>
