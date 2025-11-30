@@ -1,35 +1,41 @@
 package com.maxim.lab1.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maxim.is.generated.dto.FlatDto;
 import com.maxim.lab1.db.BatchOperationDbService;
 import com.maxim.lab1.db.FlatDbService;
 import com.maxim.lab1.model.BatchOperation;
 import com.maxim.lab1.model.Flat;
 import com.maxim.lab1.service.validation.BusinessValidationChain;
+import io.minio.MinioClient;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BatchUpdateService {
 
-    FlatDbService flatDbService;
+    private final FlatDbService flatDbService;
 
-    BusinessValidationChain businessValidationChain;
+    private final BusinessValidationChain businessValidationChain;
 
-    BatchOperationDbService batchOperationDbService;
+    private final BatchOperationDbService batchOperationDbService;
 
 
     @Transactional
-    public void saveAll(@Valid List<Flat> flats, String user) {
+    public Long saveAll(@Valid List<Flat> flats, String user) {
         flats = flats
                 .stream()
                 .peek(businessValidationChain::validate)
@@ -42,7 +48,7 @@ public class BatchUpdateService {
             result = false;
         }
 
-        batchOperationDbService.save(new BatchOperation(user, ZonedDateTime.now(), result));
+        return batchOperationDbService.save(new BatchOperation(null, user, ZonedDateTime.now(), result));
     }
 
     public List<BatchOperation> getAllByUser(String user) {

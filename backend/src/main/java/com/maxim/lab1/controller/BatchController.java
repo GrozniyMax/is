@@ -24,23 +24,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BatchController implements BatchApi {
 
-    DtoMapper dtoMapper;
-
-    BatchUpdateService batchUpdateService;
-
-    ObjectMapper objectMapper;
-
-    private List<FlatDto> read(MultipartFile file) throws IOException {
-        return objectMapper.readValue(file.getBytes(), new TypeReference<List<FlatDto>>() {});
-    }
+    BatchUpdateS3Adapter batchUpdateS3Adapter;
 
     @Override
     public ResponseEntity<Void> flatsUploadPost(String user, MultipartFile file) {
         try {
-            batchUpdateService.saveAll(
-                    read(file).stream().map(dtoMapper::toFlat).toList(),
-                    user
-            );
+            batchUpdateS3Adapter.save(file, user);
             return ResponseEntity.ok().build();
         } catch (IOException e) {
             return ResponseEntity.badRequest().build();
@@ -50,10 +39,7 @@ public class BatchController implements BatchApi {
     @Override
     public ResponseEntity<List<BatchOperationDto>> flatsUserGet(String user) {
         return ResponseEntity.ok(
-                batchUpdateService.getAllByUser(user)
-                        .stream()
-                        .map(dtoMapper::toBatchOperationDto)
-                        .toList()
+                batchUpdateS3Adapter.flatsUserGet(user)
         );
     }
 }

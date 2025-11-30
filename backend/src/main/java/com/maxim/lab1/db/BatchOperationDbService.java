@@ -26,7 +26,7 @@ public class BatchOperationDbService {
                 .toList();
     }
 
-    public void save(BatchOperation batchOperation) {
-        batchOperationRepository.save(daoMapper.toBatchOperationDao(batchOperation));
+    public Long save(BatchOperation batchOperation) {
+        return batchOperationRepository.save(daoMapper.toBatchOperationDao(batchOperation)).getId();
     }
 }

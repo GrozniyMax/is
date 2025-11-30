@@ -3,6 +3,7 @@ package com.maxim.lab1.controller;
 import com.maxim.is.generated.dto.*;
 import com.maxim.lab1.model.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
@@ -26,7 +27,8 @@ public interface DtoMapper {
     FlatDto toFlatDto(Flat flat);
     Flat toFlat(FlatDto flatDto);
 
-    BatchOperationDto toBatchOperationDto(BatchOperation batchOperation);
+    @Mapping(source = "fileLink", target = "link")
+    BatchOperationDto toBatchOperationDto(BatchOperation batchOperation, String fileLink);
 
     default OffsetDateTime toOffsetDateTime(ZonedDateTime dateTime) {
         return dateTime.toOffsetDateTime();
