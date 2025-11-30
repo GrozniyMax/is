@@ -1,0 +1,153 @@
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.cell-id {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85em;
+    color: #495057;
+    font-weight: 500;
+    min-width: 40px;
+    text-align: center;
+}
+
+.tooltip-box {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #1f2937;
+    color: #fff;
+    text-align: left;
+    padding: 0;
+    border-radius: 8px;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: max-content;
+    max-width: 500px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    border: 1px solid #374151;
+
+    transition: all 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.tooltip-wrapper:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-box::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1f2937 transparent transparent transparent;
+}
+
+/* Заголовок тултипа */
+.tooltip-header {
+    padding: 12px 16px;
+    background: #111827;
+    border-bottom: 1px solid #374151;
+    border-radius: 8px 8px 0 0;
+}
+
+.tooltip-header h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #f9fafb;
+}
+
+/* Контент тултипа */
+.tooltip-content {
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.object-container {
+    padding: 12px 16px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Стили для вложенных объектов */
+.nested-object {
+    margin: 0;
+    padding: 0;
+}
+
+.object-field {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    padding: 2px 0;
+}
+
+.field-name {
+    font-weight: 600;
+    color: #60a5fa;
+    min-width: 120px;
+    padding-right: 8px;
+    flex-shrink: 0;
+}
+
+.field-value {
+    color: #e5e7eb;
+    word-break: break-all;
+}
+
+.primitive-value {
+    color: #10b981;
+    font-family: 'Courier New', monospace;
+}
+
+/* Уровни вложенности */
+.level-1 {
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: 1px solid #4b5563;
+}
+
+.level-2 {
+    margin-left: 16px;
+    padding-left: 8px;
+    border-left: 1px solid #6b7280;
+}
+
+.level-3 {
+    margin-left: 24px;
+    padding-left: 8px;
+    border-left: 1px solid #9ca3af;
+}
+
+/* Скрываем скроллбар для красоты */
+.object-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.object-container::-webkit-scrollbar-track {
+    background: #374151;
+    border-radius: 3px;
+}
+
+.object-container::-webkit-scrollbar-thumb {
+    background: #6b7280;
+    border-radius: 3px;
+}
+
+.object-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}

@@ -1,0 +1,139 @@
+/* === Общие стили страницы === */
+body {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+/* === Контейнер формы === */
+form {
+    background-color: #2b2b2b;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+/* === Стиль для полей === */
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background-color: #3a3a3a;
+    color: #f0f0f0;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #5c9cff;
+    outline: none;
+}
+
+/* === Группы полей === */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+/* === Чекбоксы и радио === */
+input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 0.5rem;
+}
+
+/* === Кнопки === */
+button,
+input[type="submit"] {
+    background-color: #5c9cff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    width: 100%;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background-color: #74adff;
+}
+
+button:active,
+input[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* === Вложенные секции (например, блок дома или координат) === */
+fieldset {
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+legend {
+    padding: 0 0.5rem;
+    color: #ccc;
+}
+
+/* === Маленькие подсказки === */
+small {
+    display: block;
+    color: #999;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+}
+
+/* === Для загрузки файлов === */
+input[type="file"] {
+    padding: 0.4rem;
+    background-color: #3a3a3a;
+}
+
+/* === Выравнивание чекбоксов и подписей === */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+/* === Адаптивность === */
+@media (max-width: 600px) {
+    form {
+        padding: 1.5rem;
+    }
+
+    input, select, button {
+        font-size: 0.95rem;
+    }
+}

@@ -1,0 +1,624 @@
+openapi: 3.0.3
+info:
+  title: Flat API
+  description: API для управления квартирами
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер разработки
+
+tags:
+  - name: flat
+    description: Операции с квартирами
+  - name: batch
+    description: Пакетные операции
+  - name: SpecialOperations
+    description: Специальные операции
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+          description: Код ошибки
+        message:
+          type: string
+          example: "Неверные данные запроса"
+          description: Сообщение об ошибке
+
+    FlatDto:
+      type: object
+      required:
+        - name
+        - area
+        - price
+        - timeToMetroOnFoot
+        - numberOfRooms
+        - floor
+        - centralHeating
+        - transport
+        - house
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 1
+          description: Уникальный идентификатор квартиры, генерируется автоматически
+        name:
+          type: string
+          minLength: 1
+          example: "Cozy apartment"
+          description: Название квартиры, не может быть пустым
+        creationDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: Дата создания квартиры, генерируется автоматически
+        area:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          example: 65.5
+          description: Площадь квартиры, должна быть больше 0
+        price:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 5000000
+          description: Цена квартиры, должна быть больше 0
+        balcony:
+          type: boolean
+          nullable: true
+          description: Наличие балкона, может быть null
+        timeToMetroOnFoot:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          example: 15.5
+          description: Время до метро пешком, должно быть больше 0
+        numberOfRooms:
+          type: integer
+          minimum: 1
+          maximum: 20
+          example: 3
+          description: Количество комнат, должно быть больше 0 и не больше 20
+        floor:
+          type: integer
+          minimum: 1
+          example: 5
+          description: Этаж квартиры, должен быть больше 0
+        centralHeating:
+          type: boolean
+          description: Наличие центрального отопления
+        transport:
+          $ref: '#/components/schemas/TransportDto'
+        house:
+          $ref: '#/components/schemas/HouseDto'
+
+    FlatCreateDto:
+      type: object
+      required:
+        - name
+        - area
+        - price
+        - timeToMetroOnFoot
+        - numberOfRooms
+        - floor
+        - centralHeating
+        - transport
+        - house
+      properties:
+        name:
+          type: string
+          minLength: 1
+          example: "Cozy apartment"
+          description: Название квартиры, не может быть пустым
+        area:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          example: 65.5
+          description: Площадь квартиры, должна быть больше 0
+        price:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 5000000
+          description: Цена квартиры, должна быть больше 0
+        balcony:
+          type: boolean
+          nullable: true
+          description: Наличие балкона, может быть null
+        timeToMetroOnFoot:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          example: 15.5
+          description: Время до метро пешком, должно быть больше 0
+        numberOfRooms:
+          type: integer
+          minimum: 1
+          maximum: 20
+          example: 3
+          description: Количество комнат, должно быть больше 0 и не больше 20
+        floor:
+          type: integer
+          minimum: 1
+          example: 5
+          description: Этаж квартиры, должен быть больше 0
+        centralHeating:
+          type: boolean
+          description: Наличие центрального отопления
+        transport:
+          $ref: '#/components/schemas/TransportDto'
+        house:
+          $ref: '#/components/schemas/HouseDto'
+
+    HouseDto:
+      type: object
+      required:
+        - name
+        - year
+        - numberOfFlatsOnFloor
+        - numberOfLifts
+        - coordinates
+      properties:
+        id:
+          type: integer
+          format: int64
+          nullable: true
+          description: Уникальный идентификатор дома, может быть null
+        name:
+          type: string
+          minLength: 1
+          example: "Sky House"
+          description: Название дома
+        year:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 2015
+          description: Год постройки дома, должен быть больше 0
+        numberOfFlatsOnFloor:
+          type: integer
+          minimum: 1
+          example: 10
+          description: Количество квартир на этаже, должно быть больше 0
+        numberOfLifts:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 2
+          description: Количество лифтов, должно быть больше 0
+        coordinates:
+          $ref: '#/components/schemas/CoordinatesDto'
+
+    CoordinatesDto:
+      type: object
+      required:
+        - first
+        - second
+      properties:
+        first:
+          $ref: '#/components/schemas/PointDto'
+        second:
+          $ref: '#/components/schemas/PointDto'
+
+    PointDto:
+      type: object
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: number
+          format: double
+          example: 12.3
+          description: Координата X
+        y:
+          type: number
+          format: double
+          example: 45.6
+          description: Координата Y
+
+    TransportDto:
+      type: string
+      enum:
+        - FEW
+        - NORMAL
+        - LITTLE
+      description: Уровень транспортной доступности
+
+    BatchOperationDto:
+      type: object
+      required:
+        - user
+        - creationData
+        - success
+      properties:
+        user:
+          type: string
+          example: "admin"
+          description: Пользователь, выполнивший операцию
+        creationData:
+          type: string
+          format: date-time
+          example: "2023-10-15T14:30:00Z"
+          description: Дата и время создания операции
+        success:
+          type: boolean
+          example: true
+          description: Статус успешности операции
+
+paths:
+  /flats/page:
+    get:
+      tags:
+        - flat
+      summary: Получить постраничный список квартир
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Фильтр по названию квартиры
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Номер страницы
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 2
+          description: Размер страницы
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            default: "id,asc"
+          description: Поле и направление сортировки
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FlatDto'
+                  totalElements:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  size:
+                    type: integer
+                  number:
+                    type: integer
+        '400':
+          description: Неверные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /flats/create:
+    post:
+      tags:
+        - flat
+      summary: Создать новую квартиру
+      parameters:
+        - name: link
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Флаг связывания
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlatCreateDto'
+      responses:
+        '200':
+          description: Квартира успешно создана
+        '400':
+          description: Неверные данные запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /flats/update:
+    post:
+      tags:
+        - flat
+      summary: Обновить квартиру
+      parameters:
+        - name: link
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Флаг связывания
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlatDto'
+      responses:
+        '200':
+          description: Квартира успешно обновлена
+        '400':
+          description: Неверные данные запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Квартира не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /flats/{id}:
+    delete:
+      tags:
+        - flat
+      summary: Удалить квартиру по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '204':
+          description: Квартира успешно удалена
+        '400':
+          description: Неверный ID квартиры
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Квартира не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /flats/upload:
+    post:
+      tags:
+        - batch
+      summary: Загрузить пакет квартир из файла
+      parameters:
+        - name: user
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Пользователь, выполняющий операцию
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Файл с данными квартир
+      responses:
+        '200':
+          description: Файл успешно загружен и обработан
+        '400':
+          description: Неверный формат файла или данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Ошибка при обработке файла
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /flats/{user}:
+    get:
+      tags:
+        - batch
+      summary: Получить все пакетные операции пользователя
+      parameters:
+        - name: user
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Имя пользователя
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BatchOperationDto'
+        '404':
+          description: Пользователь не найден или операции отсутствуют
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /findCountByHouseGreaterThan:
+    post:
+      tags:
+        - SpecialOperations
+      summary: Найти количество квартир с домами больше указанного
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HouseDto'
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+                example: 15
+                description: Количество квартир
+        '400':
+          description: Неверные данные запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /findMostExpensive:
+    get:
+      tags:
+        - SpecialOperations
+      summary: Найти самую дорогую квартиру среди трех по ID
+      parameters:
+        - name: id1
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+          description: ID первой квартиры
+        - name: id2
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+          description: ID второй квартиры
+        - name: id3
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+          description: ID третьей квартиры
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlatDto'
+        '400':
+          description: Неверные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Квартиры не найдены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /findTotalCost:
+    get:
+      tags:
+        - SpecialOperations
+      summary: Найти общую стоимость всех квартир
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+                example: 150000000
+                description: Общая стоимость всех квартир
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
