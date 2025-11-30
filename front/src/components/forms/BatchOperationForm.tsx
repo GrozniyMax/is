@@ -53,7 +53,7 @@ export const BatchOperationForm: React.FC = () => {
 
                 setUploadResult('success');
                 formik.resetForm();
-                navigate("/batch/operations")
+                navigate("/batch/operations", {state: {user: values.user}});
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
                 setUploadResult('error');

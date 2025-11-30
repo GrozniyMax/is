@@ -81,8 +81,7 @@ public class BatchUpdateS3Adapter {
     }
 
     private String createFileLink(Long id) {
-        return "http://" + endpoint + "/" + BUCKET + "/" + id;
-
+        return endpoint + "/" + BUCKET + "/" + id + ".json";
     }
 
 }

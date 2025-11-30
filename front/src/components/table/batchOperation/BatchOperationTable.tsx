@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import {type BatchOperationDto, BatchService} from "../../../../generated/api";
+import {useLocation} from "react-router-dom";
 
 export function BatchOperationTable() {
 
-    const [name, setName] = useState('');
+    const location = useLocation();
+    const [name, setName] = useState(location.state.user || '');
     const [data, setData] = useState<BatchOperationDto[]>([]);
 
     useEffect(() => {
