@@ -38,6 +38,7 @@ export function BatchOperationTable() {
                         <tr key={index}> {/* Добавлен key */}
                             <td>{row.creationData}</td>
                             <td>{row.success ? 'Да' : 'Нет'}</td>
+                            <td><a href={row.link}>Скачать</a></td>
                         </tr>
                     ))}
                     </tbody>
