@@ -61,7 +61,9 @@ dependencies {
     //DB
     implementation("org.postgresql:postgresql:42.7.7")
     implementation("org.hibernate.orm:hibernate-spatial:6.6.26.Final")
+    implementation("org.hibernate:hibernate-jcache:6.6.26.Final")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.ehcache:ehcache:3.10.8")
 
     // S3
     implementation("io.minio:minio:8.6.0")
