@@ -7,6 +7,7 @@ import com.maxim.is.generated.dto.FlatDto;
 import com.maxim.lab1.config.MinioConfig;
 import com.maxim.lab1.db.repository.BatchOperationRepository;
 import com.maxim.lab1.service.BatchUpdateService;
+import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.UploadObjectArgs;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,12 +27,15 @@ import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @RequiredArgsConstructor
 public class BatchUpdateS3Adapter {
 
     private static final String BUCKET = "files";
+    private static final long MULTIPART_SIZE = 1024;
+
 
     private final BatchUpdateService batchUpdateService;
 
@@ -78,6 +83,27 @@ public class BatchUpdateS3Adapter {
                 .stream()
                 .map(operation -> dtoMapper.toBatchOperationDto(operation, createFileLink(operation.id())))
                 .toList();
+    }
+
+    @Async
+    public CompletableFuture<Void> loadS3File(MultipartFile file, String filename) {
+        try {
+            var inputStream = file.getInputStream();
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket("files")
+                            .object(filename)
+                            .stream(inputStream, file.getSize(), MULTIPART_SIZE)
+                            .contentType(file.getContentType())
+                            .build()
+            );
+
+            return CompletableFuture.completedFuture(null);
+        }  catch (ServerException | InsufficientDataException | ErrorResponseException
+                  | NoSuchAlgorithmException | InvalidKeyException | InvalidResponseException
+                  | XmlParserException | InternalException | IOException e) {
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
     private String createFileLink(Long id) {

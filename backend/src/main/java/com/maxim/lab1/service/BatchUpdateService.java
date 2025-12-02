@@ -16,12 +16,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +36,9 @@ public class BatchUpdateService {
     private final BatchOperationDbService batchOperationDbService;
 
 
+    @Async
     @Transactional
-    public Long saveAll(@Valid List<Flat> flats, String user) {
+    public CompletableFuture<Long> saveAll(@Valid List<Flat> flats, String user) {
         flats = flats
                 .stream()
                 .peek(businessValidationChain::validate)
@@ -48,7 +51,8 @@ public class BatchUpdateService {
             result = false;
         }
 
-        return batchOperationDbService.save(new BatchOperation(null, user, ZonedDateTime.now(), result));
+        var id = batchOperationDbService.save(new BatchOperation(null, user, ZonedDateTime.now(), result));
+        return CompletableFuture.completedFuture(id);
     }
 
     public List<BatchOperation> getAllByUser(String user) {
