@@ -1,29 +1,17 @@
-package com.maxim.lab1.service;
+package com.maxim.lab1.service.batch;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.maxim.is.generated.dto.FlatDto;
 import com.maxim.lab1.db.BatchOperationDbService;
 import com.maxim.lab1.db.FlatDbService;
 import com.maxim.lab1.model.BatchOperation;
 import com.maxim.lab1.model.Flat;
 import com.maxim.lab1.service.validation.BusinessValidationChain;
-import io.minio.MinioClient;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +23,33 @@ public class BatchUpdateService {
 
     private final BatchOperationDbService batchOperationDbService;
 
-
-    @Async
     @Transactional
-    public CompletableFuture<Long> saveAll(@Valid List<Flat> flats, String user) {
+    public BatchOperationResponse prepareAll(@Valid List<Flat> flats, String user) {
+        flats = flats
+                .stream()
+                .peek(businessValidationChain::validate)
+                .toList();
+
+        boolean result = true;
+        try {
+            flats = flatDbService.prepareAll(flats);
+        } catch (Exception e) {
+            result = false;
+        }
+
+        var id = batchOperationDbService.prepareBatchOperation(new BatchOperation(null, user, ZonedDateTime.now(), result));
+        return new BatchOperationResponse(id, flats);
+    }
+
+    @Transactional
+    public void commitAll(BatchOperationResponse batchOperationResponse) {
+        flatDbService.commitAll(batchOperationResponse.entities());
+        batchOperationDbService.commitById(batchOperationResponse.batchId());
+    }
+
+    @Transactional
+    public Long saveAll(@Valid List<Flat> flats, String user) {
+
         flats = flats
                 .stream()
                 .peek(businessValidationChain::validate)
@@ -52,7 +63,7 @@ public class BatchUpdateService {
         }
 
         var id = batchOperationDbService.save(new BatchOperation(null, user, ZonedDateTime.now(), result));
-        return CompletableFuture.completedFuture(id);
+        return id;
     }
 
     public List<BatchOperation> getAllByUser(String user) {

@@ -29,6 +29,8 @@ public class HouseDao implements Comparable<HouseDao>{
 
     private Polygon coordinates;
 
+    private TpcStatus tpcStatus;
+
 
     @Override
     public int compareTo(HouseDao o) {

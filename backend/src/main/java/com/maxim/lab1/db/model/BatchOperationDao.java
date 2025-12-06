@@ -27,4 +27,7 @@ public class BatchOperationDao {
     private ZonedDateTime creationData;
 
     private Boolean success;
+
+    @Enumerated(EnumType.STRING)
+    private TpcStatus tpcStatus = TpcStatus.PREPARED;
 }
