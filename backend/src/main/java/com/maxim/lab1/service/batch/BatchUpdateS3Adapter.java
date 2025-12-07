@@ -7,6 +7,7 @@ import com.maxim.is.generated.dto.FlatDto;
 import com.maxim.lab1.controller.DtoMapper;
 import com.maxim.lab1.db.BatchOperationDbService;
 import com.maxim.lab1.db.FlatDbService;
+import com.maxim.lab1.model.Flat;
 import io.minio.CopyObjectArgs;
 import io.minio.CopySource;
 import io.minio.MinioClient;
@@ -25,14 +26,13 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 @Component
 @RequiredArgsConstructor
 public class BatchUpdateS3Adapter {
 
     private static final String BUCKET = "files";
-    private static final long MULTIPART_SIZE = 1024;
-
 
     private final BatchOperationDbService batchOperationDbService;
 
@@ -55,8 +55,8 @@ public class BatchUpdateS3Adapter {
         BatchOperationResponse prepareData;
         String preparedFileName;
         try {
-            prepareData = prepareDb(file, user);
-            preparedFileName = prepareS3(file, prepareData.batchId());
+            prepareData = retry(3, () -> prepareDb(file, user));
+            preparedFileName = retry(3, () -> prepareS3(file, prepareData.batchId()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -70,12 +70,17 @@ public class BatchUpdateS3Adapter {
     }
 
 
-    private BatchOperationResponse prepareDb(MultipartFile file, String user) throws IOException {
-        var entities = objectMapper.readValue(file.getBytes(), new TypeReference<List<FlatDto>>() {
-                })
-                .stream()
-                .map(dtoMapper::toFlat)
-                .toList();
+    private BatchOperationResponse prepareDb(MultipartFile file, String user) {
+        List<Flat> entities = null;
+        try {
+            entities = objectMapper.readValue(file.getBytes(), new TypeReference<List<FlatDto>>() {
+                    })
+                    .stream()
+                    .map(dtoMapper::toFlat)
+                    .toList();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return batchUpdateService.prepareAll(entities, user);
     }
@@ -102,6 +107,21 @@ public class BatchUpdateS3Adapter {
 
     private void commitDb(BatchOperationResponse batchOperationResponse) {
         batchUpdateService.commitAll(batchOperationResponse);
+    }
+
+    private <T> T retry(int attempts, Supplier<T> supplier) {
+        RuntimeException exception = null;
+        for (int i = 0; i < attempts; i++) {
+            try {
+                return supplier.get();
+            } catch (RuntimeException e) {
+                exception = e;
+            }
+        }
+        if (exception != null) {
+            throw exception;
+        }
+        return null;
     }
 
     private void commitS3(String tempFile, Long batchId){
