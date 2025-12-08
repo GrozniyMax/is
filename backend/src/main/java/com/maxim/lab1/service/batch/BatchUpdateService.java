@@ -5,6 +5,7 @@ import com.maxim.lab1.db.FlatDbService;
 import com.maxim.lab1.model.BatchOperation;
 import com.maxim.lab1.model.Flat;
 import com.maxim.lab1.service.validation.BusinessValidationChain;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,17 +20,11 @@ public class BatchUpdateService {
 
     private final FlatDbService flatDbService;
 
-    private final BusinessValidationChain businessValidationChain;
-
     private final BatchOperationDbService batchOperationDbService;
+
 
     @Transactional
     public BatchOperationResponse prepareAll(@Valid List<Flat> flats, String user) {
-        flats = flats
-                .stream()
-                .peek(businessValidationChain::validate)
-                .toList();
-
         boolean result = true;
         try {
             flats = flatDbService.prepareAll(flats);
@@ -52,7 +47,6 @@ public class BatchUpdateService {
 
         flats = flats
                 .stream()
-                .peek(businessValidationChain::validate)
                 .toList();
 
         boolean result = true;

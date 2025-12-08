@@ -8,6 +8,7 @@ import com.maxim.lab1.controller.DtoMapper;
 import com.maxim.lab1.db.BatchOperationDbService;
 import com.maxim.lab1.db.FlatDbService;
 import com.maxim.lab1.model.Flat;
+import com.maxim.lab1.service.validation.BusinessValidationChain;
 import io.minio.CopyObjectArgs;
 import io.minio.CopySource;
 import io.minio.MinioClient;
@@ -36,6 +37,8 @@ public class BatchUpdateS3Adapter {
 
     private final BatchOperationDbService batchOperationDbService;
 
+    private final BusinessValidationChain businessValidationChain;
+
     private final BatchUpdateService batchUpdateService;
 
     private final FlatDbService flatDbService;
@@ -54,8 +57,9 @@ public class BatchUpdateS3Adapter {
     public void save(MultipartFile file, String user) throws IOException {
         BatchOperationResponse prepareData;
         String preparedFileName;
+        var entities = validate(file);
         try {
-            prepareData = retry(3, () -> prepareDb(file, user));
+            prepareData = retry(3, () -> prepareDb(entities, user));
             preparedFileName = retry(3, () -> prepareS3(file, prepareData.batchId()));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -69,18 +73,25 @@ public class BatchUpdateS3Adapter {
         }
     }
 
-
-    private BatchOperationResponse prepareDb(MultipartFile file, String user) {
+    private List<Flat> validate(MultipartFile file) {
         List<Flat> entities = null;
         try {
             entities = objectMapper.readValue(file.getBytes(), new TypeReference<List<FlatDto>>() {
                     })
                     .stream()
                     .map(dtoMapper::toFlat)
+                    .peek(businessValidationChain::validate)
                     .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        return entities;
+
+    }
+
+
+    private BatchOperationResponse prepareDb(List<Flat> entities, String user) {
 
         return batchUpdateService.prepareAll(entities, user);
     }
