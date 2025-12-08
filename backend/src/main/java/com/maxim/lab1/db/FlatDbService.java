@@ -1,5 +1,6 @@
 package com.maxim.lab1.db;
 
+import com.maxim.lab1.db.aop.LogCacheStatistics;
 import com.maxim.lab1.db.model.TpcStatus;
 import com.maxim.lab1.db.model.mapping.DaoMapper;
 import com.maxim.lab1.db.model.FlatDao;
@@ -79,6 +80,7 @@ public class FlatDbService {
         return mapper.toFlat(save(dao, link));
     }
 
+    @LogCacheStatistics
     private List<Flat> saveAll(List<Flat> flats, TpcStatus tpcStatus) {
         var entities = flats.stream()
                 .map(mapper::toFlatDao)
@@ -103,14 +105,17 @@ public class FlatDbService {
         return flatRepository.findById(id).map(mapper::toFlat);
     }
 
+    @LogCacheStatistics
     public Page<Flat> findAllByName(String name, Pageable pageable) {
         return flatRepository.findAllByNameAndTpcStatus(name, pageable, TpcStatus.COMMITED).map(mapper::toFlat);
     }
 
+    @LogCacheStatistics
     public Page<Flat> findAll(Pageable pageable) {
         return flatRepository.findAll(pageable).map(mapper::toFlat);
     }
 
+    @LogCacheStatistics
     public Optional<Flat> getFirstByHouseId(Long houseId) {
         var result = flatRepository.findFirstCreatedWithHouse(houseId, PageRequest.of(0, 1));
 
@@ -118,6 +123,7 @@ public class FlatDbService {
                 .map(mapper::toFlat);
     }
 
+    @LogCacheStatistics
     public long findCountByHouseGreaterThan(House house) {
         var dao = houseRepository.findByNameAndYearAndNumberOfFlatsOnFloorAndNumberOfLiftsAndTpcStatus(
                         house.name(),
@@ -130,6 +136,7 @@ public class FlatDbService {
         return flatRepository.findCountByHouseGreaterThan(dao);
     }
 
+    @LogCacheStatistics
     public List<Flat> findAllByNameStartingWith(String name) {
         return flatRepository.findAllByNameStartingWithAndTpcStatus(name, TpcStatus.COMMITED).stream().map(mapper::toFlat).toList();
     }
