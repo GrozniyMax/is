@@ -42,11 +42,13 @@ public class CacheLoggingAspect {
 
         var statistics = cacheStatisticsProvider.getStatistics();
 
+        String message = "CacheStatistics" +
+                " hits: " + statistics.hits() +
+                " misses: " + statistics.misses() +
+                " puts: " + statistics.puts();
+
         resolveLevel(level)
-                .addKeyValue("hits", statistics.hits())
-                .addKeyValue("misses", statistics.misses())
-                .addKeyValue("puts", statistics.puts())
-                .log("CacheStatistics");
+                .log(message);
     }
 
     private LoggingEventBuilder resolveLevel(LogCacheStatistics.LogLevel level) {

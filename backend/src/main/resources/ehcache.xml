@@ -1,22 +1,52 @@
-<config
-        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-        xmlns='http://www.ehcache.org/v3'
-        xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
-        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.ehcache.org/v3"
+        xmlns:jsr107="http://www.ehcache.org/v3/jsr107"
+        xsi:schemaLocation="http://www.ehcache.org/v3
+                            http://www.ehcache.org/schema/ehcache-core-3.0.xsd
+                            http://www.ehcache.org/v3/jsr107
+                            http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
 
     <service>
-        <jsr107:defaults
-                enable-management="true"
-                enable-statistics="true" />
+        <jsr107:defaults enable-management="true"
+                         enable-statistics="true"/>
     </service>
 
-    <cache-template name="defaultTemplate">
-        <resources>
-            <heap unit="entries">1000</heap>
-        </resources>
+    <cache-template name="entityTemplate">
+        <expiry>
+            <ttl unit="minutes">30</ttl>
+        </expiry>
+        <heap unit="entries">1024</heap>
+    </cache-template>
+
+    <cache-template name="collectionTemplate">
+        <expiry>
+            <ttl unit="minutes">15</ttl>
+        </expiry>
+        <heap unit="entries">512</heap>
+    </cache-template>
+
+    <cache-template name="queryTemplate">
         <expiry>
             <ttl unit="minutes">10</ttl>
         </expiry>
+        <heap unit="entries">256</heap>
     </cache-template>
 
+    <cache-template name="timestampTemplate">
+        <expiry>
+            <ttl unit="hours">2</ttl>
+        </expiry>
+        <heap unit="entries">1000</heap>
+    </cache-template>
+
+    <cache alias="com.maxim.lab1.db.model.FlatDao" uses-template="entityTemplate"/>
+    <cache alias="com.maxim.lab1.db.model.HouseDao" uses-template="entityTemplate"/>
+    <cache alias="com.maxim.lab1.db.model.BatchOperationDao" uses-template="entityTemplate"/>
+
+    <cache alias="default-query-results-region" uses-template="queryTemplate"/>
+    <cache alias="default-update-timestamps-region" uses-template="timestampTemplate"/>
+
+    <cache alias="org.hibernate.cache.spi.QueryResultsCache" uses-template="queryTemplate"/>
+    <cache alias="org.hibernate.cache.internal.StandardQueryCache" uses-template="queryTemplate"/>
 </config>

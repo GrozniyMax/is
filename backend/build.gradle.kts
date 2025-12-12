@@ -64,6 +64,8 @@ dependencies {
     implementation("org.hibernate:hibernate-jcache:6.6.26.Final")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.ehcache:ehcache:3.10.8")
+    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.7")
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
 
     // S3
     implementation("io.minio:minio:8.6.0")
