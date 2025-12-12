@@ -1,5 +1,6 @@
 package com.maxim.lab1.db;
 
+import com.maxim.lab1.db.model.TpcStatus;
 import com.maxim.lab1.db.model.mapping.DaoMapper;
 import com.maxim.lab1.db.repository.HouseRepository;
 import com.maxim.lab1.model.House;

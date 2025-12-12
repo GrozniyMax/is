@@ -1,5 +1,7 @@
 package com.maxim.lab1.db;
 
+import com.maxim.lab1.db.aop.LogCacheStatistics;
+import com.maxim.lab1.db.model.TpcStatus;
 import com.maxim.lab1.db.model.mapping.DaoMapper;
 import com.maxim.lab1.db.model.FlatDao;
 import com.maxim.lab1.db.repository.FlatRepository;
@@ -31,26 +33,67 @@ public class FlatDbService {
     FlatRepository flatRepository;
     HouseRepository houseRepository;
 
+
+    @Transactional
+    public Flat prepare(Flat flat, boolean link) {
+        return save(flat, link, TpcStatus.PREPARED);
+    }
+
+    @Transactional
+    public Flat commit(Flat flat, boolean link) {
+        return save(flat, link, TpcStatus.COMMITED);
+    }
+
     @Transactional
     public Flat save(Flat flat, boolean link) {
-        var dao = mapper.toFlatDao(flat);
+        return commit(flat, link);
+    }
 
+    @Transactional
+    public List<Flat> prepareAll(List<Flat> flats) {
+        return saveAll(flats, TpcStatus.PREPARED);
+    }
+
+    @Transactional
+    public List<Flat> commitAll(List<Flat> flats) {
+        return saveAll(flats, TpcStatus.COMMITED);
+    }
+
+    @Transactional
+    public List<Flat> saveAll(List<Flat> flats) {
+        return commitAll(flats);
+    }
+
+    private FlatDao save(FlatDao dao, boolean link) {
         if (link) {
             link(dao);
         } else {
             notLink(dao);
         }
 
-        return mapper.toFlat(flatRepository.save(dao));
+        return flatRepository.save(dao);
     }
 
-    @Transactional
-    public void saveAll(List<Flat> flats) {
-        flatRepository.saveAll(flats.stream()
+    public Flat save(Flat flat, boolean link, TpcStatus tpcStatus) {
+        var dao = mapper.toFlatDao(flat);
+        dao.setStatus(tpcStatus);
+        return mapper.toFlat(save(dao, link));
+    }
+
+    @LogCacheStatistics
+    private List<Flat> saveAll(List<Flat> flats, TpcStatus tpcStatus) {
+        var entities = flats.stream()
                 .map(mapper::toFlatDao)
                 .peek(flatDao -> flatDao.setId(null))
                 .peek(this::notLink)
-                .toList());
+                .peek(dao -> dao.setStatus(tpcStatus))
+                .toList();
+
+        flatRepository.saveAll(entities);
+
+        return entities.stream()
+                .map(mapper::toFlat)
+                .toList();
     }
 
     @Transactional
@@ -62,14 +105,17 @@ public class FlatDbService {
         return flatRepository.findById(id).map(mapper::toFlat);
     }
 
+    @LogCacheStatistics
     public Page<Flat> findAllByName(String name, Pageable pageable) {
-        return flatRepository.findAllByName(name, pageable).map(mapper::toFlat);
+        return flatRepository.findAllByNameAndTpcStatus(name, pageable, TpcStatus.COMMITED).map(mapper::toFlat);
     }
 
+    @LogCacheStatistics
     public Page<Flat> findAll(Pageable pageable) {
         return flatRepository.findAll(pageable).map(mapper::toFlat);
     }
 
+    @LogCacheStatistics
     public Optional<Flat> getFirstByHouseId(Long houseId) {
         var result = flatRepository.findFirstCreatedWithHouse(houseId, PageRequest.of(0, 1));
 
@@ -77,19 +123,22 @@ public class FlatDbService {
                 .map(mapper::toFlat);
     }
 
+    @LogCacheStatistics
     public long findCountByHouseGreaterThan(House house) {
-        var dao = houseRepository.findByNameAndYearAndNumberOfFlatsOnFloorAndNumberOfLifts(
+        var dao = houseRepository.findByNameAndYearAndNumberOfFlatsOnFloorAndNumberOfLiftsAndTpcStatus(
                         house.name(),
                         house.year(),
                         house.numberOfFlatsOnFloor(),
-                        house.numberOfLifts())
+                        house.numberOfLifts(),
+                        TpcStatus.COMMITED)
                 .orElse(houseRepository.save(mapper.toHouseDao(house)));
 
         return flatRepository.findCountByHouseGreaterThan(dao);
     }
 
+    @LogCacheStatistics
     public List<Flat> findAllByNameStartingWith(String name) {
-        return flatRepository.findAllByNameStartingWith(name).stream().map(mapper::toFlat).toList();
+        return flatRepository.findAllByNameStartingWithAndTpcStatus(name, TpcStatus.COMMITED).stream().map(mapper::toFlat).toList();
     }
 
     public Set<Transport> distinctTransport() {

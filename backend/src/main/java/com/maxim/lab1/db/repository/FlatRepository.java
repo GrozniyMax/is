@@ -2,6 +2,7 @@ package com.maxim.lab1.db.repository;
 
 import com.maxim.lab1.db.model.FlatDao;
 import com.maxim.lab1.db.model.HouseDao;
+import com.maxim.lab1.db.model.TpcStatus;
 import com.maxim.lab1.model.Transport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,25 +11,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public interface FlatRepository extends PagingAndSortingRepository<FlatDao, Long>, JpaRepository<FlatDao, Long> {
 
-    Page<FlatDao> findAllByName(String name, Pageable pageable);
+    Page<FlatDao> findAllByNameAndTpcStatus(String name, Pageable pageable, TpcStatus tpcStatus);
 
-    @Query("SELECT COUNT(f) FROM flat f WHERE f.house > :house")
+    @Query("SELECT COUNT(f) FROM flat f WHERE f.house > :house AND f.tpcStatus = 'COMMITED'")
     long findCountByHouseGreaterThan(HouseDao house);
 
-    List<FlatDao> findAllByNameStartingWith(String name);
+    List<FlatDao> findAllByNameStartingWithAndTpcStatus(String name, TpcStatus tpcStatus);
 
-    @Query("SELECT DISTINCT f.transport FROM flat f")
+    @Query("SELECT DISTINCT f.transport FROM flat f WHERE f.tpcStatus = 'COMMITED'")
     Set<Transport> distinctTransport();
 
-    @Query("SELECT SUM(f.price) FROM flat f")
+    @Query("SELECT SUM(f.price) FROM flat f WHERE f.tpcStatus = 'COMMITED'")
     long getTotalCost();
 
-    @Query("SELECT f FROM flat f WHERE f.house.id = :houseId ORDER BY f.creationDate ASC")
+    @Query("SELECT f FROM flat f WHERE f.house.id = :houseId AND f.tpcStatus = 'COMMITED' ORDER BY f.creationDate ASC")
     List<FlatDao> findFirstCreatedWithHouse(Long houseId, Pageable pageable);
 }

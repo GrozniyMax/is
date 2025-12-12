@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import {type BatchOperationDto, BatchService} from "../../../../generated/api";
+import {useLocation} from "react-router-dom";
 
 export function BatchOperationTable() {
 
-    const [name, setName] = useState('');
+    const location = useLocation();
+    const [name, setName] = useState(location.state.user || '');
     const [data, setData] = useState<BatchOperationDto[]>([]);
 
     useEffect(() => {
@@ -38,6 +40,7 @@ export function BatchOperationTable() {
                         <tr key={index}> {/* Добавлен key */}
                             <td>{row.creationData}</td>
                             <td>{row.success ? 'Да' : 'Нет'}</td>
+                            <td><a href={row.link}>Скачать</a></td>
                         </tr>
                     ))}
                     </tbody>

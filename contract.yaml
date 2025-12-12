@@ -253,6 +253,9 @@ components:
           format: date-time
           example: "2023-10-15T14:30:00Z"
           description: Дата и время создания операции
+        link:
+          type: string
+          description: Ссылка на файл для скачивания
         success:
           type: boolean
           example: true

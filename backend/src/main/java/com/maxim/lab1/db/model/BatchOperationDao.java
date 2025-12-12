@@ -4,6 +4,8 @@ package com.maxim.lab1.db.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -11,6 +13,8 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @Entity(name = "batch_operations")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class BatchOperationDao {
 
     @Id
@@ -23,4 +27,7 @@ public class BatchOperationDao {
     private ZonedDateTime creationData;
 
     private Boolean success;
+
+    @Enumerated(EnumType.STRING)
+    private TpcStatus tpcStatus = TpcStatus.PREPARED;
 }

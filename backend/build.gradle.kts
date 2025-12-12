@@ -54,20 +54,27 @@ repositories {
 
 dependencies {
     // starters
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok")
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
-    //Postgres
+    //DB
     implementation("org.postgresql:postgresql:42.7.7")
+    implementation("org.hibernate.orm:hibernate-spatial:6.6.26.Final")
+    implementation("org.hibernate:hibernate-jcache:6.6.26.Final")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.ehcache:ehcache:3.10.8")
+    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.7")
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
+
+    // S3
+    implementation("io.minio:minio:8.6.0")
 
     //Mapstruct
     implementation("org.mapstruct:mapstruct:1.6.3") // Use the latest stable version
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3") // Use the same version
 
     // Others
-    implementation("org.hibernate.orm:hibernate-spatial:6.6.26.Final")
     implementation("io.swagger.core.v3:swagger-annotations:2.2.18")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
